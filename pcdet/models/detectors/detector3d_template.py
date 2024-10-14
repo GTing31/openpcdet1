@@ -2,20 +2,13 @@ import os
 
 import torch
 import torch.nn as nn
-
+import numpy as np
 from ...ops.iou3d_nms import iou3d_nms_utils
+from ...utils.spconv_utils import find_all_spconv_keys
 from .. import backbones_2d, backbones_3d, dense_heads, roi_heads
-from ..backbones_2d import map_to_bev, encoder_2d, decoder_2d
-from ..backbones_3d import pfe, vfe, cfe
+from ..backbones_2d import map_to_bev
+from ..backbones_3d import pfe, vfe
 from ..model_utils import model_nms_utils
-
-
-"""
-We introduce three modules here: cfe, encoder_2d, decoder_2d.
-We divide the backbone_2d into two modules: encoder_2d and decoder_2d.
-The other module cfe is the context feature encoder module that adds
-self-attention features to the convolutional feature maps.
-"""
 
 
 class Detector3DTemplate(nn.Module):
@@ -29,8 +22,7 @@ class Detector3DTemplate(nn.Module):
 
         self.module_topology = [
             'vfe', 'backbone_3d', 'map_to_bev_module', 'pfe',
-            'encoder_2d_module', 'cfe', 'decoder_2d_module',
-            'backbone_2d', 'dense_head',  'point_head', 'roi_head'
+            'backbone_2d', 'dense_head', 'point_head', 'roi_head'
         ]
 
     @property
@@ -47,7 +39,8 @@ class Detector3DTemplate(nn.Module):
             'num_point_features': self.dataset.point_feature_encoder.num_point_features,
             'grid_size': self.dataset.grid_size,
             'point_cloud_range': self.dataset.point_cloud_range,
-            'voxel_size': self.dataset.voxel_size
+            'voxel_size': self.dataset.voxel_size,
+            'depth_downsample_factor': self.dataset.depth_downsample_factor
         }
         for module_name in self.module_topology:
             module, model_info_dict = getattr(self, 'build_%s' % module_name)(
@@ -101,42 +94,6 @@ class Detector3DTemplate(nn.Module):
         model_info_dict['num_bev_features'] = map_to_bev_module.num_bev_features
         return map_to_bev_module, model_info_dict
 
-    def build_encoder_2d_module(self, model_info_dict):
-        if self.model_cfg.get('ENCODER_2D', None) is None:
-            return None, model_info_dict
-
-        encoder_2d_module = encoder_2d.__all__[self.model_cfg.ENCODER_2D.NAME](
-            model_cfg=self.model_cfg.ENCODER_2D,
-            input_channels=model_info_dict['num_bev_features']
-        )
-        model_info_dict['module_list'].append(encoder_2d_module)
-        return encoder_2d_module, model_info_dict
-
-    def build_cfe(self, model_info_dict):
-        if self.model_cfg.get('CFE', None) is None:
-            return None, model_info_dict
-
-        cfe_module = cfe.__all__[self.model_cfg.CFE.NAME](
-            model_cfg=self.model_cfg.CFE,
-            grid_size=model_info_dict['grid_size'],
-            voxel_size=model_info_dict['voxel_size'],
-            point_cloud_range=model_info_dict['point_cloud_range']
-        )
-        model_info_dict['module_list'].append(cfe_module)
-        return cfe_module, model_info_dict
-
-    def build_decoder_2d_module(self, model_info_dict):
-        if self.model_cfg.get('DECODER_2D', None) is None:
-            return None, model_info_dict
-
-        decoder_2d_module = decoder_2d.__all__[self.model_cfg.DECODER_2D.NAME](
-            model_cfg=self.model_cfg.DECODER_2D,
-            input_channels=model_info_dict['num_bev_features']
-        )
-        model_info_dict['module_list'].append(decoder_2d_module)
-        model_info_dict['num_bev_features'] = decoder_2d_module.num_bev_features
-        return decoder_2d_module, model_info_dict
-
     def build_backbone_2d(self, model_info_dict):
         if self.model_cfg.get('BACKBONE_2D', None) is None:
             return None, model_info_dict
@@ -170,7 +127,8 @@ class Detector3DTemplate(nn.Module):
             return None, model_info_dict
         dense_head_module = dense_heads.__all__[self.model_cfg.DENSE_HEAD.NAME](
             model_cfg=self.model_cfg.DENSE_HEAD,
-            input_channels=model_info_dict['num_bev_features'] if 'num_bev_features' in model_info_dict else self.model_cfg.DENSE_HEAD.INPUT_FEATURES,
+            input_channels=model_info_dict[
+                'num_bev_features'] if 'num_bev_features' in model_info_dict else self.model_cfg.DENSE_HEAD.INPUT_FEATURES,
             num_class=self.num_class if not self.model_cfg.DENSE_HEAD.CLASS_AGNOSTIC else 1,
             class_names=self.class_names,
             grid_size=model_info_dict['grid_size'],
@@ -206,7 +164,7 @@ class Detector3DTemplate(nn.Module):
         point_head_module = roi_heads.__all__[self.model_cfg.ROI_HEAD.NAME](
             model_cfg=self.model_cfg.ROI_HEAD,
             input_channels=model_info_dict['num_point_features'],
-            backbone_channels= model_info_dict.get('backbone_channels', None),
+            backbone_channels=model_info_dict.get('backbone_channels', None),
             point_cloud_range=model_info_dict['point_cloud_range'],
             voxel_size=model_info_dict['voxel_size'],
             num_class=self.num_class if not self.model_cfg.ROI_HEAD.CLASS_AGNOSTIC else 1,

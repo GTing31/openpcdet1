@@ -152,7 +152,7 @@ class SparseBasicBlock(spconv.SparseModule):
         assert norm_fn is not None
         bias = norm_fn is not None
         if conv_type == "spatialgroupconv":
-            conv_func = SpatialGroupConvV2
+            conv_func = SpatialGroupConv2D
         elif conv_type == "common":
             conv_func = spconv.SubMConv2d
         else:
