@@ -2,13 +2,20 @@ import os
 
 import torch
 import torch.nn as nn
-import numpy as np
+
 from ...ops.iou3d_nms import iou3d_nms_utils
-from ...utils.spconv_utils import find_all_spconv_keys
 from .. import backbones_2d, backbones_3d, dense_heads, roi_heads
-from ..backbones_2d import map_to_bev
-from ..backbones_3d import pfe, vfe
+from ..backbones_2d import map_to_bev, encoder_2d, decoder_2d
+from ..backbones_3d import pfe, vfe, cfe
 from ..model_utils import model_nms_utils
+
+
+"""
+We introduce three modules here: cfe, encoder_2d, decoder_2d.
+We divide the backbone_2d into two modules: encoder_2d and decoder_2d.
+The other module cfe is the context feature encoder module that adds
+self-attention features to the convolutional feature maps.
+"""
 
 
 class Detector3DTemplate(nn.Module):
@@ -22,6 +29,7 @@ class Detector3DTemplate(nn.Module):
 
         self.module_topology = [
             'vfe', 'backbone_3d', 'map_to_bev_module', 'pfe',
+            'encoder_2d_module', 'cfe', 'decoder_2d_module',
             'backbone_2d', 'dense_head',  'point_head', 'roi_head'
         ]
 
@@ -39,8 +47,7 @@ class Detector3DTemplate(nn.Module):
             'num_point_features': self.dataset.point_feature_encoder.num_point_features,
             'grid_size': self.dataset.grid_size,
             'point_cloud_range': self.dataset.point_cloud_range,
-            'voxel_size': self.dataset.voxel_size,
-            'depth_downsample_factor': self.dataset.depth_downsample_factor
+            'voxel_size': self.dataset.voxel_size
         }
         for module_name in self.module_topology:
             module, model_info_dict = getattr(self, 'build_%s' % module_name)(
@@ -93,6 +100,42 @@ class Detector3DTemplate(nn.Module):
         model_info_dict['module_list'].append(map_to_bev_module)
         model_info_dict['num_bev_features'] = map_to_bev_module.num_bev_features
         return map_to_bev_module, model_info_dict
+
+    def build_encoder_2d_module(self, model_info_dict):
+        if self.model_cfg.get('ENCODER_2D', None) is None:
+            return None, model_info_dict
+
+        encoder_2d_module = encoder_2d.__all__[self.model_cfg.ENCODER_2D.NAME](
+            model_cfg=self.model_cfg.ENCODER_2D,
+            input_channels=model_info_dict['num_bev_features']
+        )
+        model_info_dict['module_list'].append(encoder_2d_module)
+        return encoder_2d_module, model_info_dict
+
+    def build_cfe(self, model_info_dict):
+        if self.model_cfg.get('CFE', None) is None:
+            return None, model_info_dict
+
+        cfe_module = cfe.__all__[self.model_cfg.CFE.NAME](
+            model_cfg=self.model_cfg.CFE,
+            grid_size=model_info_dict['grid_size'],
+            voxel_size=model_info_dict['voxel_size'],
+            point_cloud_range=model_info_dict['point_cloud_range']
+        )
+        model_info_dict['module_list'].append(cfe_module)
+        return cfe_module, model_info_dict
+
+    def build_decoder_2d_module(self, model_info_dict):
+        if self.model_cfg.get('DECODER_2D', None) is None:
+            return None, model_info_dict
+
+        decoder_2d_module = decoder_2d.__all__[self.model_cfg.DECODER_2D.NAME](
+            model_cfg=self.model_cfg.DECODER_2D,
+            input_channels=model_info_dict['num_bev_features']
+        )
+        model_info_dict['module_list'].append(decoder_2d_module)
+        model_info_dict['num_bev_features'] = decoder_2d_module.num_bev_features
+        return decoder_2d_module, model_info_dict
 
     def build_backbone_2d(self, model_info_dict):
         if self.model_cfg.get('BACKBONE_2D', None) is None:
@@ -206,7 +249,7 @@ class Detector3DTemplate(nn.Module):
 
             box_preds = batch_dict['batch_box_preds'][batch_mask]
             src_box_preds = box_preds
-            
+
             if not isinstance(batch_dict['batch_cls_preds'], list):
                 cls_preds = batch_dict['batch_cls_preds'][batch_mask]
 
@@ -253,7 +296,7 @@ class Detector3DTemplate(nn.Module):
                     label_key = 'roi_labels' if 'roi_labels' in batch_dict else 'batch_pred_labels'
                     label_preds = batch_dict[label_key][index]
                 else:
-                    label_preds = label_preds + 1 
+                    label_preds = label_preds + 1
                 selected, selected_scores = model_nms_utils.class_agnostic_nms(
                     box_scores=cls_preds, box_preds=box_preds,
                     nms_config=post_process_cfg.NMS_CONFIG,
@@ -267,12 +310,12 @@ class Detector3DTemplate(nn.Module):
                 final_scores = selected_scores
                 final_labels = label_preds[selected]
                 final_boxes = box_preds[selected]
-                    
+
             recall_dict = self.generate_recall_record(
                 box_preds=final_boxes if 'rois' not in batch_dict else src_box_preds,
                 recall_dict=recall_dict, batch_index=index, data_dict=batch_dict,
                 thresh_list=post_process_cfg.RECALL_THRESH_LIST
-            )        
+            )
 
             record_dict = {
                 'pred_boxes': final_boxes,
@@ -370,7 +413,7 @@ class Detector3DTemplate(nn.Module):
             pretrain_checkpoint = torch.load(pre_trained_path, map_location=loc_type)
             pretrain_model_state_disk = pretrain_checkpoint['model_state']
             model_state_disk.update(pretrain_model_state_disk)
-            
+
         version = checkpoint.get("version", None)
         if version is not None:
             logger.info('==> Checkpoint trained from version: %s' % version)

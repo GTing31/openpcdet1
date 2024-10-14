@@ -16,7 +16,7 @@ MODEL:
         NUM_FILTERS: [32]
 
     BACKBONE_3D:
-        NAME: PillarBackBone8x
+        NAME: PillarResBackBone8xLargeKernel2D
    
 
     BACKBONE_2D:
@@ -102,7 +102,7 @@ MODEL:
 
 
 OPTIMIZATION:
-    BATCH_SIZE_PER_GPU: 4
+    BATCH_SIZE_PER_GPU: 12
     NUM_EPOCHS: 80
 
     OPTIMIZER: adam_onecycle

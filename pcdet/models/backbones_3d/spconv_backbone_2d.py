@@ -40,18 +40,18 @@ def post_act_block_dense(in_channels, out_channels, kernel_size, stride=1, paddi
 class SparseBasicBlock(spconv.SparseModule):
     expansion = 1
 
-    def __init__(self, inplanes, planes, stride=1, norm_fn=None, downsample=None, indice_key=None):
+    def __init__(self, inplanes, planes, kernel_size=3, stride=1, padding=1, norm_fn=None, downsample=None, indice_key=None):
         super(SparseBasicBlock, self).__init__()
 
         assert norm_fn is not None
         bias = norm_fn is not None
         self.conv1 = spconv.SubMConv2d(
-            inplanes, planes, kernel_size=3, stride=stride, padding=1, bias=bias, indice_key=indice_key
+            inplanes, planes, kernel_size, stride=stride, padding=padding, bias=bias, indice_key=indice_key
         )
         self.bn1 = norm_fn(planes)
         self.relu = nn.ReLU()
         self.conv2 = spconv.SubMConv2d(
-            planes, planes, kernel_size=3, stride=stride, padding=1, bias=bias, indice_key=indice_key
+            planes, planes, kernel_size, stride=stride, padding=padding, bias=bias, indice_key=indice_key
         )
         self.bn2 = norm_fn(planes)
         self.downsample = downsample
@@ -297,4 +297,108 @@ class PillarRes18BackBone8x(nn.Module):
             }
         })
         
+        return batch_dict
+
+
+class PillarRes18v2(nn.Module):
+    def __init__(self, model_cfg, input_channels, grid_size, **kwargs):
+        super().__init__()
+        self.model_cfg = model_cfg
+        norm_fn = partial(nn.BatchNorm1d, eps=1e-3, momentum=0.01)
+        self.sparse_shape = grid_size[[1, 0]]
+
+        block = post_act_block
+        dense_block = post_act_block_dense
+
+        self.conv1 = spconv.SparseSequential(
+            SparseBasicBlock(32, 32, 7, padding=3, norm_fn=norm_fn, indice_key='res1'),
+            SparseBasicBlock(32, 32, 7, padding=3, norm_fn=norm_fn, indice_key='res1'),
+            SparseBasicBlock(32, 32, 7, padding=3, norm_fn=norm_fn, indice_key='res1'),
+            SparseBasicBlock(32, 32, 7, padding=3, norm_fn=norm_fn, indice_key='res1'),
+        )
+
+        self.conv2 = spconv.SparseSequential(
+            # [1600, 1408] <- [800, 704]
+            block(32, 64, 7, norm_fn=norm_fn, stride=2, padding=3, indice_key='spconv2', conv_type='spconv'),
+            SparseBasicBlock(64, 64, 3, padding=1, norm_fn=norm_fn, indice_key='res2'),
+            SparseBasicBlock(64, 64, 3, padding=1, norm_fn=norm_fn, indice_key='res2'),
+
+        )
+
+        self.conv3 = spconv.SparseSequential(
+            # [800, 704] <- [400, 352]
+            block(64, 128, 7, norm_fn=norm_fn, stride=2, padding=3, indice_key='spconv3', conv_type='spconv'),
+            SparseBasicBlock(128, 128, 3, padding=1, norm_fn=norm_fn, indice_key='res3'),
+            SparseBasicBlock(128, 128, 3, padding=1, norm_fn=norm_fn, indice_key='res3'),
+        )
+
+        self.conv4 = spconv.SparseSequential(
+            # [400, 352] <- [200, 176]
+            block(128, 256, 7, norm_fn=norm_fn, stride=2, padding=3, indice_key='spconv4', conv_type='spconv'),
+            SparseBasicBlock(256, 256, 3, padding=1, norm_fn=norm_fn, indice_key='res4'),
+        )
+
+        norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
+        self.conv5 = nn.Sequential(
+            # [200, 176] <- [100, 88]
+            dense_block(256, 256, 7, norm_fn=norm_fn, stride=2, padding=3),
+            BasicBlock(256, 256, norm_fn=norm_fn),
+        )
+
+        self.num_point_features = 256
+        self.backbone_channels = {
+            'x_conv1': 32,
+            'x_conv2': 64,
+            'x_conv3': 128,
+            'x_conv4': 256,
+            'x_conv5': 256
+        }
+
+    def forward(self, batch_dict):
+        pillar_features, pillar_coords = batch_dict['pillar_features'], batch_dict['pillar_coords']
+        batch_size = batch_dict['batch_size']
+        input_sp_tensor = spconv.SparseConvTensor(
+            features=pillar_features,
+            indices=pillar_coords.int(),
+            spatial_shape=self.sparse_shape,
+            batch_size=batch_size
+        )
+
+        # print(f"sptensor.features:{input_sp_tensor.features.shape},spatial shape: {input_sp_tensor.spatial_shape}")
+        x_conv1 = self.conv1(input_sp_tensor)
+        # print(f"x_conv1.features:{x_conv1.features.shape},spatial shape: {x_conv1.spatial_shape}")
+        x_conv2 = self.conv2(x_conv1)
+        x_conv3 = self.conv3(x_conv2)
+        x_conv4 = self.conv4(x_conv3)
+        x_conv4 = x_conv4.dense()
+        x_conv5 = self.conv5(x_conv4)
+
+        # print(f"x_conv1 spatial shape: {x_conv1.spatial_shape}")
+        # print(f"x_conv2 spatial shape: {x_conv2.spatial_shape}")
+        # print(f"x_conv3 spatial shape: {x_conv3.spatial_shape}")
+        # print(f"x_conv4 spatial shape: {x_conv4.shape}")
+        # print(f"x_conv5 spatial shape: {x_conv5.shape}")
+        # batch_dict.update({
+        #     'encoded_spconv_tensor': out,
+        #     'encoded_spconv_tensor_stride': 8
+        # })
+        batch_dict.update({
+            'multi_scale_2d_features': {
+                'x_conv1': x_conv1,
+                'x_conv2': x_conv2,
+                'x_conv3': x_conv3,
+                'x_conv4': x_conv4,
+                'x_conv5': x_conv5,
+            }
+        })
+        batch_dict.update({
+            'multi_scale_2d_strides': {
+                'x_conv1': 1,
+                'x_conv2': 2,
+                'x_conv3': 4,
+                'x_conv4': 8,
+                'x_conv5': 16,
+            }
+        })
+
         return batch_dict

@@ -10,6 +10,29 @@ except Exception as e:
 
 from .vfe_template import VFETemplate
 
+class SEModule(nn.Module):
+    def __init__(self, channels, reduction=4):
+        super(SEModule, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool1d(1)
+        self.fc = nn.Sequential(
+            nn.Linear(channels, channels // reduction),
+            nn.ReLU(inplace=True),
+            nn.Linear(channels // reduction, channels),
+            nn.Sigmoid()
+        )
+
+    def forward(self, x):
+        # print(f"SEModule input x shape: {x.shape}")
+
+        y = torch.mean(x, dim=0, keepdim=True)
+        # print(f"After global avg pooling, y shape: {y.shape}")
+        y = self.fc(y)
+        # print(f"After fc, y shape: {y.shape}")
+        out = x * y  # (N, C)
+        # print(f"Output shape: {out.shape}")
+        return out
+
+
 
 class PFNLayerV2(nn.Module):
     def __init__(self,
@@ -32,11 +55,15 @@ class PFNLayerV2(nn.Module):
         
         self.relu = nn.ReLU()
 
+        self.se_module = SEModule(out_channels)
+
     def forward(self, inputs, unq_inv):
 
         x = self.linear(inputs)
         x = self.norm(x) if self.use_norm else x
         x = self.relu(x)
+        # x = self.se_module(x)
+        # print(f"se_xy={x.shape}")
         x_max = torch_scatter.scatter_max(x, unq_inv, dim=0)[0]
 
         if self.last_vfe:

@@ -17,7 +17,28 @@ from pcdet.utils import common_utils
 from train_utils.optimization import build_optimizer, build_scheduler
 from train_utils.train_utils import train_model
 
+from collections import defaultdict
 
+from prettytable import PrettyTable
+
+def count_parameters(model):
+    table = PrettyTable(["Modules", "Parameters"])
+    module_params = defaultdict(int)
+    total_params = 0
+    for name, parameter in model.named_parameters():
+        if not parameter.requires_grad:
+            continue
+        params = parameter.numel()
+        # 提取模块名称，您可以根据需要调整这里的层级
+        module_name = name.split('.')[0]  # 获取顶级模块名
+        module_params[module_name] += params
+        total_params += params
+
+    for module_name, params in module_params.items():
+        table.add_row([module_name, params])
+    print(table)
+    print(f"Total Trainable Params: {total_params}")
+    return total_params
 def parse_config():
     parser = argparse.ArgumentParser(description='arg parser')
     parser.add_argument('--cfg_file', type=str, default=None, help='specify the config for training')
@@ -164,6 +185,7 @@ def main():
     if dist_train:
         model = nn.parallel.DistributedDataParallel(model, device_ids=[cfg.LOCAL_RANK % torch.cuda.device_count()])
     logger.info(f'----------- Model {cfg.MODEL.NAME} created, param count: {sum([m.numel() for m in model.parameters()])} -----------')
+    count_parameters(model)
     logger.info(model)
 
     lr_scheduler, lr_warmup_scheduler = build_scheduler(

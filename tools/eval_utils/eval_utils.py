@@ -8,6 +8,9 @@ import tqdm
 from pcdet.models import load_data_to_gpu
 from pcdet.utils import common_utils
 
+# Print GFLOPs and Params of model
+from thop import profile
+
 
 def statistics_info(cfg, ret_dict, metric, disp_dict):
     for cur_thresh in cfg.MODEL.POST_PROCESSING.RECALL_THRESH_LIST:
@@ -19,11 +22,11 @@ def statistics_info(cfg, ret_dict, metric, disp_dict):
         '(%d, %d) / %d' % (metric['recall_roi_%s' % str(min_thresh)], metric['recall_rcnn_%s' % str(min_thresh)], metric['gt_num'])
 
 
-def eval_one_epoch(cfg, args, model, dataloader, epoch_id, logger, dist_test=False, result_dir=None):
+def eval_one_epoch(cfg, model, dataloader, epoch_id, logger, dist_test=False, save_to_file=False, result_dir=None):
     result_dir.mkdir(parents=True, exist_ok=True)
 
     final_output_dir = result_dir / 'final_result' / 'data'
-    if args.save_to_file:
+    if save_to_file:
         final_output_dir.mkdir(parents=True, exist_ok=True)
 
     metric = {
@@ -36,10 +39,6 @@ def eval_one_epoch(cfg, args, model, dataloader, epoch_id, logger, dist_test=Fal
     dataset = dataloader.dataset
     class_names = dataset.class_names
     det_annos = []
-
-    if getattr(args, 'infer_time', False):
-        start_iter = int(len(dataloader) * 0.1)
-        infer_time_meter = common_utils.AverageMeter()
 
     logger.info('*************** EPOCH %s EVALUATION *****************' % epoch_id)
     if dist_test:
@@ -57,25 +56,18 @@ def eval_one_epoch(cfg, args, model, dataloader, epoch_id, logger, dist_test=Fal
     start_time = time.time()
     for i, batch_dict in enumerate(dataloader):
         load_data_to_gpu(batch_dict)
-
-        if getattr(args, 'infer_time', False):
-            start_time = time.time()
-
+        # Print params and GFLOPs in model
+        if i == 0:
+            macs, params = profile(model, inputs=(batch_dict,))
+            print("Model PARAMS:  , Model G-FLOPS: ", params, "\t", macs/batch_dict['batch_size'])
         with torch.no_grad():
             pred_dicts, ret_dict = model(batch_dict)
-
         disp_dict = {}
-
-        if getattr(args, 'infer_time', False):
-            inference_time = time.time() - start_time
-            infer_time_meter.update(inference_time * 1000)
-            # use ms to measure inference time
-            disp_dict['infer_time'] = f'{infer_time_meter.val:.2f}({infer_time_meter.avg:.2f})'
 
         statistics_info(cfg, ret_dict, metric, disp_dict)
         annos = dataset.generate_prediction_dicts(
             batch_dict, pred_dicts, class_names,
-            output_path=final_output_dir if args.save_to_file else None
+            output_path=final_output_dir if save_to_file else None
         )
         det_annos += annos
         if cfg.LOCAL_RANK == 0:
@@ -131,7 +123,7 @@ def eval_one_epoch(cfg, args, model, dataloader, epoch_id, logger, dist_test=Fal
     logger.info(result_str)
     ret_dict.update(result_dict)
 
-    logger.info('Result is saved to %s' % result_dir)
+    logger.info('Result is save to %s' % result_dir)
     logger.info('****************Evaluation done.*****************')
     return ret_dict
 
