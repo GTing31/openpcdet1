@@ -243,7 +243,7 @@ class PillarRes18BackBone8x(nn.Module):
         norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
         self.conv5 = nn.Sequential(
             # [200, 176] <- [100, 88]
-            dense_block(256, 256, 3, norm_fn=norm_fn, stride=2, padding=1),
+            dense_block(256, 256, 3, norm_fn=norm_fn, stride=2, padding=1),#stride=2
             BasicBlock(256, 256, norm_fn=norm_fn),
             BasicBlock(256, 256, norm_fn=norm_fn),
         )
@@ -293,9 +293,12 @@ class PillarRes18BackBone8x(nn.Module):
                 'x_conv2': 2,
                 'x_conv3': 4,
                 'x_conv4': 8,
-                'x_conv5': 16,
+                'x_conv5': 16,#16
             }
         })
+
+
+
         
         return batch_dict
 
@@ -402,3 +405,5 @@ class PillarRes18v2(nn.Module):
         })
 
         return batch_dict
+
+
