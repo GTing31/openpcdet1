@@ -146,46 +146,57 @@ class PillarInceptionNextBackbone(nn.Module):
 
         # 定义主干网络的各个卷积层，使用 MetaNeXtBlock
         self.conv1 = nn.Sequential(
-            Block(32, 32, norm_fn=norm_fn),
+            Block(64, 64, norm_fn=norm_fn, stride=2),
             # ResBlock(32, 32, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            # MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn, act_layer=nn.RELU),
+            # ResBlock(32, 32, norm_fn=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
         )
 
         self.conv2 = nn.Sequential(
-            downsample_block(32, 64, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn)
+            downsample_block(64, 128, norm_fn=norm_fn, stride=2),
+            # ResBlock(64, 64, norm_fn=norm_fn),
+            # ResBlock(64, 64, norm_fn=norm_fn),
+            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            # MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            # MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+
         )
 
         self.conv3 = nn.Sequential(
-            downsample_block(64, 128, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-        )
-
-        self.conv4 = nn.Sequential(
             downsample_block(128, 256, norm_fn=norm_fn),
+            # ResBlock(128, 128, norm_fn=norm_fn),
+            # ResBlock(128, 128, norm_fn=norm_fn),
             MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
             MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+
         )
 
-        self.conv5 = nn.Sequential(
-            downsample_block(256, 256, norm_fn=norm_fn, stride=1),
-            MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn, act_layer=nn.RELU),
-        )
+        # self.conv4 = nn.Sequential(
+        #     downsample_block(256, 256, norm_fn=norm_fn),
+        #     # ResBlock(256, 256, norm_fn=norm_fn),
+        #     # ResBlock(256, 256, norm_fn=norm_fn),
+        #     MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+        #     # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+        # )
+        #
+        # self.conv5 = nn.Sequential(
+        #     downsample_block(256, 256, norm_fn=norm_fn),
+        #     # ResBlock(256, 256, norm_fn=norm_fn),
+        #     # ResBlock(256, 256, norm_fn=norm_fn),
+        #     # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+        #
+        # )
 
         self.num_point_features = 256
         self.backbone_channels = {
-            'x_conv1': 32,
-            'x_conv2': 64,
-            'x_conv3': 128,
-            'x_conv4': 256,
-            'x_conv5': 256
+            'x_conv1': 64,
+            'x_conv2': 128,
+            'x_conv3': 256,
+            # 'x_conv4': 256,
+            # 'x_conv5': 256
         }
 
     def forward(self, batch_dict):
@@ -208,13 +219,13 @@ class PillarInceptionNextBackbone(nn.Module):
         x_conv3 = self.conv3(x_conv2)  # 输出通道数 128，stride 4
         # print(f"After conv3: shape={x_conv3.shape}")
 
-        x_conv4 = self.conv4(x_conv3)  # 输出通道数 256，stride 8
-        # x_conv4 = F.pad(x_conv4, (0, 1, 0, 1), mode='constant', value=0)# 为了保证特征图大小能被 2 整除
-        # print(f"After conv4: shape={x_conv4.shape}")
-
-
-
-        x_conv5 = self.conv5(x_conv4)  # 输出通道数 256，stride 16
+        # x_conv4 = self.conv4(x_conv3)  # 输出通道数 256，stride 8
+        # # x_conv4 = F.pad(x_conv4, (0, 1, 0, 1), mode='constant', value=0)# 为了保证特征图大小能被 2 整除
+        # # print(f"After conv4: shape={x_conv4.shape}")
+        #
+        #
+        #
+        # x_conv5 = self.conv5(x_conv4)  # 输出通道数 256，stride 16
         # print(f"After conv5: shape={x_conv5.shape}")
 
         # 更新 batch_dict，包含多尺度特征
@@ -223,16 +234,62 @@ class PillarInceptionNextBackbone(nn.Module):
                 'x_conv1': x_conv1,
                 'x_conv2': x_conv2,
                 'x_conv3': x_conv3,
-                'x_conv4': x_conv4,
-                'x_conv5': x_conv5,
+                # 'x_conv4': x_conv4,
+                # 'x_conv5': x_conv5,
             },
             'multi_scale_2d_strides': {
-                'x_conv1': 1,
-                'x_conv2': 2,
-                'x_conv3': 4,
-                'x_conv4': 8,
-                'x_conv5': 8,
+                'x_conv1': 2,
+                'x_conv2': 4,
+                'x_conv3': 8,
+                # 'x_conv4': 8,
+                # 'x_conv5': 16,
             }
         })
 
         return batch_dict
+
+class InceptionResNetBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1, downsample=None, branch_ratio=0.25):
+        super(InceptionResNetBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+
+        # 使用 InceptionDWConv2d 代替标准的 3x3 卷积
+        self.inception_dwconv = InceptionDWConv2d(
+            in_channels=out_channels,
+            square_kernel_size=3,
+            band_kernel_size=11,
+            branch_ratio=branch_ratio
+        )
+        self.bn2 = nn.BatchNorm2d(out_channels)
+
+        self.conv3 = nn.Conv2d(out_channels, out_channels, kernel_size=1, bias=False)
+        self.bn3 = nn.BatchNorm2d(out_channels)
+
+        self.downsample = downsample
+        self.stride = stride
+
+    def forward(self, x):
+        identity = x
+
+        out = self.conv1(x)  # 1x1 卷积
+        out = self.bn1(out)
+        out = self.relu(out)
+
+        out = self.inception_dwconv(out)  # InceptionDWConv2d 模块
+        out = self.bn2(out)
+        out = self.relu(out)
+
+        out = self.conv3(out)  # 1x1 卷积
+        out = self.bn3(out)
+
+        if self.downsample is not None:
+            identity = self.downsample(x)
+
+        out += identity  # 残差连接
+        out = self.relu(out)
+
+        return out
+
+

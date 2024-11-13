@@ -8,6 +8,7 @@ from .spconv_unet import UNetV2
 from .dsvt import DSVT
 from .spconv_backbone_largekernel import PillarResBackBone8xLargeKernel2D
 from .Inceptionnext import PillarInceptionNextBackbone
+from .starnet import StarNet
 
 __all__ = {
     'VoxelBackBone8x': VoxelBackBone8x,
@@ -26,5 +27,6 @@ __all__ = {
     'DSVT': DSVT,
     'PillarResBackBone8xLargeKernel2D': PillarResBackBone8xLargeKernel2D,
     'PillarInceptionNextBackbone': PillarInceptionNextBackbone,
+    'StarNet': StarNet
 
 }

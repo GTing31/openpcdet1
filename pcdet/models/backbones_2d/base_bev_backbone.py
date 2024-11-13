@@ -127,11 +127,11 @@ class BaseBEVBackboneV1(nn.Module):
         upsample_strides = self.model_cfg.UPSAMPLE_STRIDES
         assert len(num_upsample_filters) == len(upsample_strides)
 
-        self.conv_layer = nn.Sequential(
-            nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1, bias=False),
-            nn.BatchNorm2d(256, eps=1e-3, momentum=0.01),
-            nn.ReLU()
-        )
+        # self.conv_layer = nn.Sequential(
+        #     nn.Conv2d(128, 256, kernel_size=3, stride=1, padding=1, bias=False),
+        #     nn.BatchNorm2d(256, eps=1e-3, momentum=0.01),
+        #     nn.ReLU()
+        # )
 
         num_levels = len(layer_nums)
         self.blocks = nn.ModuleList()
@@ -196,8 +196,8 @@ class BaseBEVBackboneV1(nn.Module):
         """
         spatial_features = data_dict['multi_scale_2d_features']
 
-        x_conv4 = spatial_features['x_conv3']
-        x_conv4 = self.conv_layer(x_conv4)
+        x_conv4 = spatial_features['x_conv4']
+        # x_conv4 = self.conv_layer(x_conv4)
 
         x_conv5 = spatial_features['x_conv5']
         # print('x_conv4:', x_conv4.shape)
@@ -223,29 +223,19 @@ class BaseBEVBackboneV1(nn.Module):
 
 
 class BasicBlock(nn.Module):
-    expansion: int = 1
+    expansion = 1
 
-    def __init__(
-        self,
-        inplanes: int,
-        planes: int,
-        stride: int = 1,
-        padding: int = 1,
-        downsample: bool = False,
-    ) -> None:
-        super().__init__()
-        self.conv1 = nn.Conv2d(inplanes, planes, kernel_size=3, stride=stride, padding=padding, bias=False)
-        self.bn1 = nn.BatchNorm2d(planes, eps=1e-3, momentum=0.01)
-        self.relu1 = nn.ReLU()
-        self.conv2 = nn.Conv2d(planes, planes, kernel_size=3, stride=stride, padding=1, bias=False)
-        self.bn2 = nn.BatchNorm2d(planes, eps=1e-3, momentum=0.01)
-        self.relu2 = nn.ReLU()
+    def __init__(self, inplanes, planes, stride=1, norm_fn=None, downsample=None):
+        super(BasicBlock, self).__init__()
+
+        assert norm_fn is not None
+        bias = norm_fn is not None
+        self.conv1 = nn.Conv2d(inplanes, planes, 3, stride=stride, padding=1, bias=bias)
+        self.bn1 = norm_fn(planes)
+        self.relu = nn.ReLU()
+        self.conv2 = nn.Conv2d(planes, planes, 3, stride=stride, padding=1, bias=bias)
+        self.bn2 = norm_fn(planes)
         self.downsample = downsample
-        if self.downsample:
-            self.downsample_layer = nn.Sequential(
-                nn.Conv2d(inplanes, planes, kernel_size=1, stride=stride, padding=0, bias=False),
-                nn.BatchNorm2d(planes, eps=1e-3, momentum=0.01)
-            )
         self.stride = stride
 
     def forward(self, x):
@@ -253,125 +243,134 @@ class BasicBlock(nn.Module):
 
         out = self.conv1(x)
         out = self.bn1(out)
-        out = self.relu1(out)
+        out = self.relu(out)
 
         out = self.conv2(out)
         out = self.bn2(out)
-        # print('out:', out.shape)
 
-        if self.downsample:
-            identity = self.downsample_layer(x)
+        if self.downsample is not None:
+            identity = self.downsample(x)
 
-        out += identity
-        out = self.relu2(out)
+        out = out + identity
+        out = self.relu(out)
 
         return out
 
 
+class deconv_block(nn.Module):
+    def __init__(self, in_channels, out_channels, kernel_size, stride, padding, norm_fn=None):
+        super(deconv_block, self).__init__()
+        self.deconv = nn.ConvTranspose2d(in_channels, out_channels, kernel_size, stride=stride,
+                                         padding=padding, bias=False)
+        self.bn = norm_fn(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+
+    def forward(self, x):
+        x = self.deconv(x)
+        x = self.bn(x)
+        x = self.relu(x)
+        return x
 class BaseBEVResBackbone(nn.Module):
     def __init__(self, model_cfg, input_channels):
         super().__init__()
         self.model_cfg = model_cfg
+        norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
 
-        if self.model_cfg.get('LAYER_NUMS', None) is not None:
-            assert len(self.model_cfg.LAYER_NUMS) == len(self.model_cfg.LAYER_STRIDES) == len(self.model_cfg.NUM_FILTERS)
-            layer_nums = self.model_cfg.LAYER_NUMS
-            layer_strides = self.model_cfg.LAYER_STRIDES
-            num_filters = self.model_cfg.NUM_FILTERS
-        else:
-            layer_nums = layer_strides = num_filters = []
+        ResBlock = BasicBlock
+        Block = post_act_block
 
-        if self.model_cfg.get('UPSAMPLE_STRIDES', None) is not None:
-            assert len(self.model_cfg.UPSAMPLE_STRIDES) == len(self.model_cfg.NUM_UPSAMPLE_FILTERS)
-            num_upsample_filters = self.model_cfg.NUM_UPSAMPLE_FILTERS
-            upsample_strides = self.model_cfg.UPSAMPLE_STRIDES
-        else:
-            upsample_strides = num_upsample_filters = []
 
-        num_levels = len(layer_nums)
-        c_in_list = [input_channels, *num_filters[:-1]]
-        self.blocks = nn.ModuleList()
-        self.deblocks = nn.ModuleList()
-        for idx in range(num_levels):
-            cur_layers = [
-                # nn.ZeroPad2d(1),
-                BasicBlock(c_in_list[idx], num_filters[idx], layer_strides[idx], 1, True)
-            ]
-            for k in range(layer_nums[idx]):
-                cur_layers.extend([
-                    BasicBlock(num_filters[idx], num_filters[idx])
-                ])
-            self.blocks.append(nn.Sequential(*cur_layers))
-            if len(upsample_strides) > 0:
-                stride = upsample_strides[idx]
-                if stride >= 1:
-                    self.deblocks.append(nn.Sequential(
-                        nn.ConvTranspose2d(
-                            num_filters[idx], num_upsample_filters[idx],
-                            upsample_strides[idx],
-                            stride=upsample_strides[idx], bias=False
-                        ),
-                        nn.BatchNorm2d(num_upsample_filters[idx], eps=1e-3, momentum=0.01),
-                        nn.ReLU()
-                    ))
-                else:
-                    stride = np.round(1 / stride).astype(np.int)
-                    self.deblocks.append(nn.Sequential(
-                        nn.Conv2d(
-                            num_filters[idx], num_upsample_filters[idx],
-                            stride,
-                            stride=stride, bias=False
-                        ),
-                        nn.BatchNorm2d(num_upsample_filters[idx], eps=1e-3, momentum=0.01),
-                        nn.ReLU()
-                    ))
+        self.conv1 = nn.Sequential(
+            Block(64, 64, norm_fn=norm_fn),
+            ResBlock(64, 64, norm_fn=norm_fn),
+            ResBlock(64, 64, norm_fn=norm_fn)
+        )
 
-        c_in = sum(num_upsample_filters) if len(num_upsample_filters) > 0 else sum(num_filters)
-        if len(upsample_strides) > num_levels:
-            self.deblocks.append(nn.Sequential(
-                nn.ConvTranspose2d(c_in, c_in, upsample_strides[-1], stride=upsample_strides[-1], bias=False),
-                nn.BatchNorm2d(c_in, eps=1e-3, momentum=0.01),
-                nn.ReLU(),
-            ))
+        self.conv2 = nn.Sequential(
+            Block(64, 128, norm_fn=norm_fn),
+            ResBlock(128, 128, norm_fn=norm_fn),
+            ResBlock(128, 128, norm_fn=norm_fn)
+        )
 
-        self.num_bev_features = c_in
+        self.conv3 = nn.Sequential(
+            Block(128, 256, norm_fn=norm_fn),
+            ResBlock(256, 256, norm_fn=norm_fn),
+            ResBlock(256, 256, norm_fn=norm_fn)
+        )
+
+        self.deconv1 = deconv_block(64, 128, 1, 1, 0, norm_fn=norm_fn)
+        self.deconv2 = deconv_block(128, 128, 2, 2, 0, norm_fn=norm_fn)
+        self.deconv3 = deconv_block(256, 128, 4, 4, 0, norm_fn=norm_fn)
+
+        self.num_bev_features = 384
 
     def forward(self, data_dict):
-        """
-        Args:
-            data_dict:
-                spatial_features
-        Returns:
-        """
-        spatial_features = data_dict['spatial_features']
-        ups = []
-        ret_dict = {}
-        x = spatial_features
-        for i in range(len(self.blocks)):
-            x = self.blocks[i](x)
+        x = data_dict['spatial_features']
+        # print('Input spatial_features shape:', x.shape)
 
-            stride = int(spatial_features.shape[2] / x.shape[2])
-            ret_dict['spatial_features_%dx' % stride] = x
-            if len(self.deblocks) > 0:
-                ups.append(self.deblocks[i](x))
-            else:
-                ups.append(x)
+        # 经过 conv1
+        x_conv1 = self.conv1(x)
+        # print('After conv1 shape:', x_conv1.shape)
 
-        if len(ups) > 1:
-            x = torch.cat(ups, dim=1)
-        elif len(ups) == 1:
-            x = ups[0]
+        # 经过 conv2
+        x_conv2 = self.conv2(x_conv1)
+        # print('After conv2 shape:', x_conv2.shape)
 
-        if len(self.deblocks) > len(self.blocks):
-            x = self.deblocks[-1](x)
+        # 经过 conv3
+        x_conv3 = self.conv3(x_conv2)
+        # print('After conv3 shape:', x_conv3.shape)
+
+        # 上采样并收集特征
+        up1 = self.deconv1(x_conv1)
+        up2 = self.deconv2(x_conv2)
+        up3 = self.deconv3(x_conv3)
+        # print('Up1 shape:', up1.shape)
+        # print('Up2 shape:', up2.shape)
+        # print('Up3 shape:', up3.shape)
+
+        # 拼接特征图
+        x = torch.cat([up1, up2, up3], dim=1)
+        # print('Concatenated feature map shape:', x.shape)
 
         data_dict['spatial_features_2d'] = x
 
         return data_dict
 
-def post_act_block(in_channels, out_channels, kernel_size, stride=1, padding=1, dilation=1, norm_fn=None):
+class Inceptionneck(nn.Module):
+    def __init__(self, model_cfg, input_channels):
+        super().__init__()
+        self.model_cfg = model_cfg
+        norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
+
+        # self.deconv1 = deconv_block(64, 128, 1, 1, 0, norm_fn=norm_fn)
+        # self.deconv2 = deconv_block(128, 128, 2, 2, 0, norm_fn=norm_fn)
+        # self.deconv3 = deconv_block(256, 128, 4, 4, 0, norm_fn=norm_fn)
+        self.num_bev_features = 256
+    def forward(self, data_dict):
+        spatial_features = data_dict['multi_scale_2d_features']
+        # conv3 = spatial_features['x_conv1']
+        # conv4 = spatial_features['x_conv2']
+        # conv5 = spatial_features['x_conv3']
+
+        conv4 = spatial_features['x_conv4']
+        # up1 = self.deconv1(conv3)
+        # up2 = self.deconv2(conv4)
+        # up3 = self.deconv3(conv5)
+        # print('conv3:', up1.shape)
+        # print('conv4:', conv4.shape)
+        # print('conv5:', up3.shape)
+
+        # x = torch.cat([up1, up2, up3], dim=1)
+        # print('concat:', x.shape)
+
+        data_dict['spatial_features_2d'] = conv4
+
+        return data_dict
+
+
+def post_act_block(in_channels, out_channels, kernel_size=3, stride=2, padding=1, norm_fn=None):
     m = nn.Sequential(
-        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=padding, dilation=dilation, bias=False),
+        nn.Conv2d(in_channels, out_channels, kernel_size, stride, padding=padding, bias=False),
         norm_fn(out_channels),
         nn.ReLU(),
     )

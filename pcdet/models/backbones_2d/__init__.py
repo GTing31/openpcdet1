@@ -1,5 +1,5 @@
 from .base_bev_backbone import (BaseBEVBackbone, BaseBEVBackboneV1, BaseBEVResBackbone, ConcatResBackbone,
-                                BaseBEVBackboneV1_SingleScale)
+                                BaseBEVBackboneV1_SingleScale, Inceptionneck)
 
 __all__ = {
     'BaseBEVBackbone': BaseBEVBackbone,
@@ -7,4 +7,5 @@ __all__ = {
     'BaseBEVResBackbone': BaseBEVResBackbone,
     'ConcatResBackbone': ConcatResBackbone,
     'BaseBEVBackboneV1_SingleScale': BaseBEVBackboneV1_SingleScale,
+    'Inceptionneck': Inceptionneck,
 }
