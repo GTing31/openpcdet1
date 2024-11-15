@@ -1,0 +1,1442 @@
+2024-10-13 18:44:55,255   INFO  **********************Start logging**********************
+2024-10-13 18:44:55,255   INFO  CUDA_VISIBLE_DEVICES=ALL
+2024-10-13 18:44:55,255   INFO  Training in distributed mode : total_batch_size: 80
+2024-10-13 18:44:55,255   INFO  cfg_file         cfgs/nuscenes_models/cbgs_pillar0075_res2d_centerpoint.yaml
+2024-10-13 18:44:55,255   INFO  batch_size       20
+2024-10-13 18:44:55,255   INFO  epochs           20
+2024-10-13 18:44:55,255   INFO  workers          8
+2024-10-13 18:44:55,255   INFO  extra_tag        pillarnet_batch20
+2024-10-13 18:44:55,256   INFO  ckpt             None
+2024-10-13 18:44:55,256   INFO  pretrained_model None
+2024-10-13 18:44:55,256   INFO  launcher         pytorch
+2024-10-13 18:44:55,256   INFO  tcp_port         18888
+2024-10-13 18:44:55,256   INFO  sync_bn          False
+2024-10-13 18:44:55,256   INFO  fix_random_seed  False
+2024-10-13 18:44:55,256   INFO  ckpt_save_interval 1
+2024-10-13 18:44:55,256   INFO  local_rank       0
+2024-10-13 18:44:55,256   INFO  max_ckpt_save_num 30
+2024-10-13 18:44:55,256   INFO  merge_all_iters_to_one_epoch False
+2024-10-13 18:44:55,256   INFO  set_cfgs         None
+2024-10-13 18:44:55,256   INFO  max_waiting_mins 0
+2024-10-13 18:44:55,256   INFO  start_epoch      0
+2024-10-13 18:44:55,256   INFO  num_epochs_to_eval 0
+2024-10-13 18:44:55,256   INFO  save_to_file     False
+2024-10-13 18:44:55,256   INFO  use_tqdm_to_record False
+2024-10-13 18:44:55,256   INFO  logger_iter_interval 50
+2024-10-13 18:44:55,256   INFO  ckpt_save_time_interval 300
+2024-10-13 18:44:55,256   INFO  wo_gpu_stat      False
+2024-10-13 18:44:55,256   INFO  use_amp          False
+2024-10-13 18:44:55,256   INFO  cfg.ROOT_DIR: /home/OpenPCDet
+2024-10-13 18:44:55,256   INFO  cfg.LOCAL_RANK: 0
+2024-10-13 18:44:55,256   INFO  cfg.CLASS_NAMES: ['car', 'truck', 'construction_vehicle', 'bus', 'trailer', 'barrier', 'motorcycle', 'bicycle', 'pedestrian', 'traffic_cone']
+2024-10-13 18:44:55,256   INFO  ----------- DATA_CONFIG -----------
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.DATASET: NuScenesDataset
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.DATA_PATH: ../data/nuscenes
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.VERSION: v1.0-trainval
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.MAX_SWEEPS: 10
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.PRED_VELOCITY: True
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.SET_NAN_VELOCITY_TO_ZEROS: True
+2024-10-13 18:44:55,256   INFO  cfg.DATA_CONFIG.FILTER_MIN_POINTS_IN_GT: 1
+2024-10-13 18:44:55,256   INFO  ----------- DATA_SPLIT -----------
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.DATA_SPLIT.train: train
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.DATA_SPLIT.test: val
+2024-10-13 18:44:55,257   INFO  ----------- INFO_PATH -----------
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.INFO_PATH.train: ['nuscenes_infos_10sweeps_train.pkl']
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.INFO_PATH.test: ['nuscenes_infos_10sweeps_val.pkl']
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.POINT_CLOUD_RANGE: [-54.0, -54.0, -5.0, 54.0, 54.0, 3.0]
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.BALANCED_RESAMPLING: True
+2024-10-13 18:44:55,257   INFO  ----------- DATA_AUGMENTOR -----------
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.DATA_AUGMENTOR.DISABLE_AUG_LIST: ['placeholder']
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.DATA_AUGMENTOR.AUG_CONFIG_LIST: [{'NAME': 'gt_sampling', 'DB_INFO_PATH': ['nuscenes_dbinfos_10sweeps_withvelo.pkl'], 'PREPARE': {'filter_by_min_points': ['car:5', 'truck:5', 'construction_vehicle:5', 'bus:5', 'trailer:5', 'barrier:5', 'motorcycle:5', 'bicycle:5', 'pedestrian:5', 'traffic_cone:5']}, 'SAMPLE_GROUPS': ['car:2', 'truck:3', 'construction_vehicle:7', 'bus:4', 'trailer:6', 'barrier:2', 'motorcycle:6', 'bicycle:6', 'pedestrian:2', 'traffic_cone:2'], 'NUM_POINT_FEATURES': 5, 'DATABASE_WITH_FAKELIDAR': False, 'REMOVE_EXTRA_WIDTH': [0.0, 0.0, 0.0], 'LIMIT_WHOLE_SCENE': True}, {'NAME': 'random_world_flip', 'ALONG_AXIS_LIST': ['x', 'y']}, {'NAME': 'random_world_rotation', 'WORLD_ROT_ANGLE': [-0.78539816, 0.78539816]}, {'NAME': 'random_world_scaling', 'WORLD_SCALE_RANGE': [0.9, 1.1]}, {'NAME': 'random_world_translation', 'NOISE_TRANSLATE_STD': [0.5, 0.5, 0.5]}]
+2024-10-13 18:44:55,257   INFO  ----------- POINT_FEATURE_ENCODING -----------
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.POINT_FEATURE_ENCODING.encoding_type: absolute_coordinates_encoding
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.POINT_FEATURE_ENCODING.used_feature_list: ['x', 'y', 'z', 'intensity', 'timestamp']
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.POINT_FEATURE_ENCODING.src_feature_list: ['x', 'y', 'z', 'intensity', 'timestamp']
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG.DATA_PROCESSOR: [{'NAME': 'mask_points_and_boxes_outside_range', 'REMOVE_OUTSIDE_BOXES': True}, {'NAME': 'shuffle_points', 'SHUFFLE_ENABLED': {'train': True, 'test': True}}, {'NAME': 'transform_points_to_voxels', 'VOXEL_SIZE': [0.075, 0.075, 0.2], 'MAX_POINTS_PER_VOXEL': 10, 'MAX_NUMBER_OF_VOXELS': {'train': 120000, 'test': 160000}}]
+2024-10-13 18:44:55,257   INFO  cfg.DATA_CONFIG._BASE_CONFIG_: cfgs/dataset_configs/nuscenes_dataset.yaml
+2024-10-13 18:44:55,257   INFO  ----------- MODEL -----------
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.NAME: PillarNet
+2024-10-13 18:44:55,257   INFO  ----------- VFE -----------
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.NAME: DynamicPillarVFESimple2D
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.WITH_DISTANCE: False
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.USE_ABSLOTE_XYZ: True
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.USE_CLUSTER_XYZ: False
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.USE_NORM: True
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.VFE.NUM_FILTERS: [32]
+2024-10-13 18:44:55,257   INFO  ----------- BACKBONE_3D -----------
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.BACKBONE_3D.NAME: PillarRes18BackBone8x
+2024-10-13 18:44:55,257   INFO  ----------- BACKBONE_2D -----------
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.BACKBONE_2D.NAME: BaseBEVBackboneV1
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.BACKBONE_2D.LAYER_NUMS: [5, 5]
+2024-10-13 18:44:55,257   INFO  cfg.MODEL.BACKBONE_2D.LAYER_STRIDES: [1, 2]
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.BACKBONE_2D.NUM_FILTERS: [256, 256]
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.BACKBONE_2D.UPSAMPLE_STRIDES: [1, 2]
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.BACKBONE_2D.NUM_UPSAMPLE_FILTERS: [128, 128]
+2024-10-13 18:44:55,258   INFO  ----------- DENSE_HEAD -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.NAME: CenterHead
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.CLASS_AGNOSTIC: False
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.CLASS_NAMES_EACH_HEAD: [['car'], ['truck', 'construction_vehicle'], ['bus', 'trailer'], ['barrier'], ['motorcycle', 'bicycle'], ['pedestrian', 'traffic_cone']]
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SHARED_CONV_CHANNEL: 64
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.USE_BIAS_BEFORE_NORM: True
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.NUM_HM_CONV: 2
+2024-10-13 18:44:55,258   INFO  ----------- SEPARATE_HEAD_CFG -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_ORDER: ['center', 'center_z', 'dim', 'rot', 'vel']
+2024-10-13 18:44:55,258   INFO  ----------- HEAD_DICT -----------
+2024-10-13 18:44:55,258   INFO  ----------- center -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.center.out_channels: 2
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.center.num_conv: 2
+2024-10-13 18:44:55,258   INFO  ----------- center_z -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.center_z.out_channels: 1
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.center_z.num_conv: 2
+2024-10-13 18:44:55,258   INFO  ----------- dim -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.dim.out_channels: 3
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.dim.num_conv: 2
+2024-10-13 18:44:55,258   INFO  ----------- rot -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.rot.out_channels: 2
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.rot.num_conv: 2
+2024-10-13 18:44:55,258   INFO  ----------- vel -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.vel.out_channels: 2
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.SEPARATE_HEAD_CFG.HEAD_DICT.vel.num_conv: 2
+2024-10-13 18:44:55,258   INFO  ----------- TARGET_ASSIGNER_CONFIG -----------
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.TARGET_ASSIGNER_CONFIG.FEATURE_MAP_STRIDE: 8
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.TARGET_ASSIGNER_CONFIG.NUM_MAX_OBJS: 500
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.TARGET_ASSIGNER_CONFIG.GAUSSIAN_OVERLAP: 0.1
+2024-10-13 18:44:55,258   INFO  cfg.MODEL.DENSE_HEAD.TARGET_ASSIGNER_CONFIG.MIN_RADIUS: 2
+2024-10-13 18:44:55,259   INFO  ----------- LOSS_CONFIG -----------
+2024-10-13 18:44:55,259   INFO  ----------- LOSS_WEIGHTS -----------
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.LOSS_CONFIG.LOSS_WEIGHTS.cls_weight: 1.0
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.LOSS_CONFIG.LOSS_WEIGHTS.loc_weight: 0.25
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.LOSS_CONFIG.LOSS_WEIGHTS.code_weights: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 0.2, 1.0, 1.0]
+2024-10-13 18:44:55,259   INFO  ----------- POST_PROCESSING -----------
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.SCORE_THRESH: 0.1
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.POST_CENTER_LIMIT_RANGE: [-61.2, -61.2, -10.0, 61.2, 61.2, 10.0]
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.MAX_OBJ_PER_SAMPLE: 500
+2024-10-13 18:44:55,259   INFO  ----------- NMS_CONFIG -----------
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.NMS_CONFIG.NMS_TYPE: nms_gpu
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.NMS_CONFIG.NMS_THRESH: 0.2
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.NMS_CONFIG.NMS_PRE_MAXSIZE: 1000
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.DENSE_HEAD.POST_PROCESSING.NMS_CONFIG.NMS_POST_MAXSIZE: 83
+2024-10-13 18:44:55,259   INFO  ----------- POST_PROCESSING -----------
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.POST_PROCESSING.RECALL_THRESH_LIST: [0.3, 0.5, 0.7]
+2024-10-13 18:44:55,259   INFO  cfg.MODEL.POST_PROCESSING.EVAL_METRIC: kitti
+2024-10-13 18:44:55,259   INFO  ----------- OPTIMIZATION -----------
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.BATCH_SIZE_PER_GPU: 20
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.NUM_EPOCHS: 20
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.OPTIMIZER: adam_onecycle
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.LR: 0.001
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.WEIGHT_DECAY: 0.01
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.MOMENTUM: 0.9
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.MOMS: [0.95, 0.85]
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.PCT_START: 0.4
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.DIV_FACTOR: 10
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.DECAY_STEP_LIST: [35, 45]
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.LR_DECAY: 0.1
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.LR_CLIP: 1e-07
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.LR_WARMUP: False
+2024-10-13 18:44:55,259   INFO  cfg.OPTIMIZATION.WARMUP_EPOCH: 1
+2024-10-13 18:44:55,260   INFO  cfg.OPTIMIZATION.GRAD_NORM_CLIP: 10
+2024-10-13 18:44:55,260   INFO  cfg.TAG: cbgs_pillar0075_res2d_centerpoint
+2024-10-13 18:44:55,260   INFO  cfg.EXP_GROUP_PATH: nuscenes_models
+2024-10-13 18:44:55,297   INFO  ----------- Create dataloader & network & optimizer -----------
+2024-10-13 18:44:58,488   INFO  Database filter by min points car: 339949 => 294532
+2024-10-13 18:44:58,498   INFO  Database filter by min points truck: 65262 => 60344
+2024-10-13 18:44:58,500   INFO  Database filter by min points construction_vehicle: 11050 => 10589
+2024-10-13 18:44:58,502   INFO  Database filter by min points bus: 12286 => 11619
+2024-10-13 18:44:58,504   INFO  Database filter by min points trailer: 19202 => 17934
+2024-10-13 18:44:58,517   INFO  Database filter by min points barrier: 107507 => 101993
+2024-10-13 18:44:58,519   INFO  Database filter by min points motorcycle: 8846 => 8055
+2024-10-13 18:44:58,520   INFO  Database filter by min points bicycle: 8185 => 7531
+2024-10-13 18:44:58,538   INFO  Database filter by min points pedestrian: 161928 => 148520
+2024-10-13 18:44:58,547   INFO  Database filter by min points traffic_cone: 62964 => 55504
+2024-10-13 18:44:58,614   INFO  Loading NuScenes dataset
+2024-10-13 18:45:00,792   INFO  Total samples for NuScenes dataset: 28130
+2024-10-13 18:45:01,079   INFO  Total samples after balanced resampling: 123580
+2024-10-13 18:45:04,249   INFO  ----------- Model PillarNet created, param count: 15250630 -----------
+2024-10-13 18:45:04,250   INFO  DistributedDataParallel(
+  (module): PillarNet(
+    (vfe): DynamicPillarVFESimple2D(
+      (pfn_layers): ModuleList(
+        (0): PFNLayerV2(
+          (linear): Linear(in_features=8, out_features=32, bias=False)
+          (norm): BatchNorm1d(32, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+        )
+      )
+    )
+    (backbone_3d): PillarRes18BackBone8x(
+      (conv1): SparseSequential(
+        (0): SparseBasicBlock(
+          (conv1): SubMConv2d(32, 32, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(32, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(32, 32, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(32, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+        (1): SparseBasicBlock(
+          (conv1): SubMConv2d(32, 32, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(32, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(32, 32, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(32, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+      )
+      (conv2): SparseSequential(
+        (0): SparseSequential(
+          (0): SparseConv2d(32, 64, kernel_size=[3, 3], stride=[2, 2], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], bias=False, algo=ConvAlgo.MaskImplicitGemm)
+          (1): BatchNorm1d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+        (1): SparseBasicBlock(
+          (conv1): SubMConv2d(64, 64, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(64, 64, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+        (2): SparseBasicBlock(
+          (conv1): SubMConv2d(64, 64, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(64, 64, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(64, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+      )
+      (conv3): SparseSequential(
+        (0): SparseSequential(
+          (0): SparseConv2d(64, 128, kernel_size=[3, 3], stride=[2, 2], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], bias=False, algo=ConvAlgo.MaskImplicitGemm)
+          (1): BatchNorm1d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+        (1): SparseBasicBlock(
+          (conv1): SubMConv2d(128, 128, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(128, 128, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+        (2): SparseBasicBlock(
+          (conv1): SubMConv2d(128, 128, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(128, 128, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+      )
+      (conv4): SparseSequential(
+        (0): SparseSequential(
+          (0): SparseConv2d(128, 256, kernel_size=[3, 3], stride=[2, 2], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], bias=False, algo=ConvAlgo.MaskImplicitGemm)
+          (1): BatchNorm1d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+        (1): SparseBasicBlock(
+          (conv1): SubMConv2d(256, 256, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(256, 256, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+        (2): SparseBasicBlock(
+          (conv1): SubMConv2d(256, 256, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn1): BatchNorm1d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): SubMConv2d(256, 256, kernel_size=[3, 3], stride=[1, 1], padding=[1, 1], dilation=[1, 1], output_padding=[0, 0], algo=ConvAlgo.MaskImplicitGemm)
+          (bn2): BatchNorm1d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+      )
+      (conv5): Sequential(
+        (0): Sequential(
+          (0): Conv2d(256, 256, kernel_size=(3, 3), stride=(2, 2), padding=(1, 1), bias=False)
+          (1): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+        (1): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (bn1): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (bn2): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+        (2): BasicBlock(
+          (conv1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (bn1): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (relu): ReLU()
+          (conv2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          (bn2): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+        )
+      )
+    )
+    (map_to_bev_module): None
+    (pfe): None
+    (backbone_2d): BaseBEVBackboneV1(
+      (blocks): ModuleList(
+        (0): Sequential(
+          (0): ZeroPad2d((1, 1, 1, 1))
+          (1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+          (2): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (3): ReLU()
+          (4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (5): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (6): ReLU()
+          (7): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (8): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (9): ReLU()
+          (10): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (11): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (12): ReLU()
+          (13): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (14): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (15): ReLU()
+          (16): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (17): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (18): ReLU()
+        )
+        (1): Sequential(
+          (0): ZeroPad2d((1, 1, 1, 1))
+          (1): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), bias=False)
+          (2): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (3): ReLU()
+          (4): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (5): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (6): ReLU()
+          (7): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (8): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (9): ReLU()
+          (10): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (11): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (12): ReLU()
+          (13): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (14): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (15): ReLU()
+          (16): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1), bias=False)
+          (17): BatchNorm2d(256, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (18): ReLU()
+        )
+      )
+      (deblocks): ModuleList(
+        (0): Sequential(
+          (0): ConvTranspose2d(256, 128, kernel_size=(1, 1), stride=(1, 1), bias=False)
+          (1): BatchNorm2d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+        (1): Sequential(
+          (0): ConvTranspose2d(256, 128, kernel_size=(2, 2), stride=(2, 2), bias=False)
+          (1): BatchNorm2d(128, eps=0.001, momentum=0.01, affine=True, track_running_stats=True)
+          (2): ReLU()
+        )
+      )
+    )
+    (dense_head): CenterHead(
+      (shared_conv): Sequential(
+        (0): Conv2d(256, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+        (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        (2): ReLU()
+      )
+      (heads_list): ModuleList(
+        (0): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (1): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (2): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (3): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (4): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+        (5): SeparateHead(
+          (center): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (center_z): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 1, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (dim): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 3, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (rot): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (vel): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+          (hm): Sequential(
+            (0): Sequential(
+              (0): Conv2d(64, 64, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+              (1): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+              (2): ReLU()
+            )
+            (1): Conv2d(64, 2, kernel_size=(3, 3), stride=(1, 1), padding=(1, 1))
+          )
+        )
+      )
+      (hm_loss_func): FocalLossCenterNet()
+      (reg_loss_func): RegLossCenterNet()
+    )
+    (point_head): None
+    (roi_head): None
+  )
+)
+2024-10-13 18:45:04,259   INFO  **********************Start training nuscenes_models/cbgs_pillar0075_res2d_centerpoint(pillarnet_batch20)**********************
+2024-10-13 18:52:44,333   INFO  Train:    1/20 (  5%) [   0/1545 (  0%)]  Loss: 267.3 (267.)  LR: 1.000e-04  Time cost: 01:16/32:59:59 [07:40/659:59:40]  Acc_iter 1           Data time: 9.37(9.37)  Forward time: 65.59(65.59)  Batch time: 74.97(74.97)
+2024-10-13 18:55:15,245   INFO  Train:    1/20 (  5%) [  49/1545 (  3%)]  Loss: 23.44 (40.6)  LR: 1.000e-04  Time cost: 03:47/1:53:35 [10:10/39:02:40]  Acc_iter 50          Data time: 0.00(0.27)  Forward time: 3.00(4.25)  Batch time: 3.01(4.52)
+2024-10-13 18:56:29,691   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 18:57:47,850   INFO  Train:    1/20 (  5%) [  99/1545 (  6%)]  Loss: 21.92 (31.6)  LR: 1.001e-04  Time cost: 06:20/1:31:40 [12:43/32:32:49]  Acc_iter 100         Data time: 0.00(0.16)  Forward time: 2.92(3.62)  Batch time: 2.93(3.79)
+2024-10-13 19:00:28,393   INFO  Train:    1/20 (  5%) [ 149/1545 ( 10%)]  Loss: 20.85 (28.0)  LR: 1.003e-04  Time cost: 09:00/1:23:54 [15:24/30:48:19]  Acc_iter 150         Data time: 0.00(0.11)  Forward time: 3.06(3.48)  Batch time: 3.06(3.59)
+2024-10-13 19:00:29,733   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:00:29 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45532 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 44484 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45214 / 46068 MB |
+
+2024-10-13 19:01:30,237   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:03:08,122   INFO  Train:    1/20 (  5%) [ 199/1545 ( 13%)]  Loss: 19.52 (25.9)  LR: 1.006e-04  Time cost: 11:40/1:18:35 [18:03/29:52:38]  Acc_iter 200         Data time: 0.01(0.09)  Forward time: 2.65(3.41)  Batch time: 2.66(3.49)
+2024-10-13 19:05:42,321   INFO  Train:    1/20 (  5%) [ 249/1545 ( 16%)]  Loss: 17.74 (24.4)  LR: 1.009e-04  Time cost: 14:14/1:13:51 [20:38/29:06:51]  Acc_iter 250         Data time: 0.00(0.08)  Forward time: 3.35(3.33)  Batch time: 3.35(3.41)
+2024-10-13 19:06:28,219   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:08:15,604   INFO  Train:    1/20 (  5%) [ 299/1545 ( 19%)]  Loss: 16.47 (23.3)  LR: 1.013e-04  Time cost: 16:48/1:09:47 [23:11/28:33:56]  Acc_iter 300         Data time: 0.02(0.09)  Forward time: 3.29(3.26)  Batch time: 3.31(3.35)
+2024-10-13 19:08:17,001   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:08:16 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45532 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 44852 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45582 / 46068 MB |
+
+2024-10-13 19:10:52,246   INFO  Train:    1/20 (  5%) [ 349/1545 ( 23%)]  Loss: 16.06 (22.3)  LR: 1.018e-04  Time cost: 19:24/1:06:20 [25:47/28:14:34]  Acc_iter 350         Data time: 0.10(0.10)  Forward time: 3.53(3.23)  Batch time: 3.63(3.32)
+2024-10-13 19:11:30,128   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:13:28,801   INFO  Train:    1/20 (  5%) [ 399/1545 ( 26%)]  Loss: 15.47 (21.5)  LR: 1.023e-04  Time cost: 22:01/1:03:05 [28:24/27:59:17]  Acc_iter 400         Data time: 0.01(0.11)  Forward time: 2.60(3.19)  Batch time: 2.60(3.30)
+2024-10-13 19:16:06,028   INFO  Train:    1/20 (  5%) [ 449/1545 ( 29%)]  Loss: 14.67 (20.8)  LR: 1.029e-04  Time cost: 24:38/1:00:01 [31:01/27:47:34]  Acc_iter 450         Data time: 0.26(0.11)  Forward time: 3.03(3.17)  Batch time: 3.29(3.28)
+2024-10-13 19:16:07,449   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:16:07 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45374 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45220 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45582 / 46068 MB |
+
+2024-10-13 19:16:28,019   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:18:48,083   INFO  Train:    1/20 (  5%) [ 499/1545 ( 32%)]  Loss: 15.21 (20.2)  LR: 1.036e-04  Time cost: 27:20/57:12 [33:43/27:42:34]  Acc_iter 500         Data time: 0.05(0.10)  Forward time: 2.62(3.17)  Batch time: 2.67(3.28)
+2024-10-13 19:21:26,752   INFO  Train:    1/20 (  5%) [ 549/1545 ( 36%)]  Loss: 14.11 (19.7)  LR: 1.044e-04  Time cost: 29:59/54:18 [36:22/27:34:52]  Acc_iter 550         Data time: 0.00(0.10)  Forward time: 3.23(3.17)  Batch time: 3.23(3.27)
+2024-10-13 19:21:30,178   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:24:04,791   INFO  Train:    1/20 (  5%) [ 599/1545 ( 39%)]  Loss: 14.48 (19.2)  LR: 1.052e-04  Time cost: 32:37/51:26 [39:00/27:27:29]  Acc_iter 600         Data time: 0.01(0.09)  Forward time: 3.37(3.17)  Batch time: 3.38(3.26)
+2024-10-13 19:24:06,507   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:24:06 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45422 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45220 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 44880 / 46068 MB |
+
+2024-10-13 19:26:28,925   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:26:48,484   INFO  Train:    1/20 (  5%) [ 649/1545 ( 42%)]  Loss: 13.91 (18.8)  LR: 1.061e-04  Time cost: 35:21/48:43 [41:44/27:25:13]  Acc_iter 650         Data time: 0.00(0.09)  Forward time: 3.18(3.17)  Batch time: 3.18(3.26)
+2024-10-13 19:29:28,900   INFO  Train:    1/20 (  5%) [ 699/1545 ( 45%)]  Loss: 13.35 (18.5)  LR: 1.071e-04  Time cost: 38:01/45:57 [44:24/27:20:31]  Acc_iter 700         Data time: 0.00(0.09)  Forward time: 3.17(3.17)  Batch time: 3.17(3.26)
+2024-10-13 19:31:28,670   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:32:08,331   INFO  Train:    1/20 (  5%) [ 749/1545 ( 48%)]  Loss: 13.51 (18.1)  LR: 1.081e-04  Time cost: 40:40/43:10 [47:04/27:15:27]  Acc_iter 750         Data time: 0.00(0.08)  Forward time: 3.12(3.17)  Batch time: 3.12(3.25)
+2024-10-13 19:32:09,728   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:32:09 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45422 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45248 / 46068 MB |
+
+2024-10-13 19:34:50,592   INFO  Train:    1/20 (  5%) [ 799/1545 ( 52%)]  Loss: 13.89 (17.8)  LR: 1.092e-04  Time cost: 43:23/40:27 [49:46/27:12:26]  Acc_iter 800         Data time: 0.00(0.08)  Forward time: 3.17(3.17)  Batch time: 3.17(3.25)
+2024-10-13 19:36:28,603   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:37:33,743   INFO  Train:    1/20 (  5%) [ 849/1545 ( 55%)]  Loss: 12.42 (17.6)  LR: 1.104e-04  Time cost: 46:06/37:45 [52:29/27:10:00]  Acc_iter 850         Data time: 0.00(0.08)  Forward time: 3.29(3.18)  Batch time: 3.30(3.25)
+2024-10-13 19:40:11,215   INFO  Train:    1/20 (  5%) [ 899/1545 ( 58%)]  Loss: 12.74 (17.3)  LR: 1.117e-04  Time cost: 48:43/34:58 [55:06/27:04:22]  Acc_iter 900         Data time: 0.00(0.07)  Forward time: 2.54(3.17)  Batch time: 2.54(3.25)
+2024-10-13 19:40:12,598   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:40:12 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45422 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45248 / 46068 MB |
+
+2024-10-13 19:41:30,814   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:42:50,122   INFO  Train:    1/20 (  5%) [ 949/1545 ( 61%)]  Loss: 12.59 (17.1)  LR: 1.130e-04  Time cost: 51:22/32:13 [57:45/26:59:48]  Acc_iter 950         Data time: 0.00(0.07)  Forward time: 3.17(3.17)  Batch time: 3.17(3.24)
+2024-10-13 19:45:27,641   INFO  Train:    1/20 (  5%) [ 999/1545 ( 65%)]  Loss: 12.16 (16.9)  LR: 1.144e-04  Time cost: 54:00/29:29 [1:00:23/26:54:45]  Acc_iter 1000        Data time: 0.01(0.07)  Forward time: 3.03(3.17)  Batch time: 3.03(3.24)
+2024-10-13 19:46:30,676   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:48:07,528   INFO  Train:    1/20 (  5%) [1049/1545 ( 68%)]  Loss: 12.16 (16.6)  LR: 1.159e-04  Time cost: 56:40/26:46 [1:03:03/26:51:02]  Acc_iter 1050        Data time: 0.00(0.07)  Forward time: 3.46(3.17)  Batch time: 3.46(3.24)
+2024-10-13 19:48:08,941   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:48:08 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45422 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45248 / 46068 MB |
+
+2024-10-13 19:50:42,124   INFO  Train:    1/20 (  5%) [1099/1545 ( 71%)]  Loss: 12.08 (16.4)  LR: 1.174e-04  Time cost: 59:14/24:01 [1:05:37/26:45:02]  Acc_iter 1100        Data time: 0.00(0.07)  Forward time: 3.20(3.16)  Batch time: 3.20(3.23)
+2024-10-13 19:51:30,764   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:53:19,856   INFO  Train:    1/20 (  5%) [1149/1545 ( 74%)]  Loss: 11.75 (16.3)  LR: 1.191e-04  Time cost: 1:01:52/21:18 [1:08:15/26:40:41]  Acc_iter 1150        Data time: 0.00(0.07)  Forward time: 2.94(3.16)  Batch time: 2.95(3.23)
+2024-10-13 19:56:01,599   INFO  Train:    1/20 (  5%) [1199/1545 ( 78%)]  Loss: 11.53 (16.1)  LR: 1.207e-04  Time cost: 1:04:34/18:37 [1:10:57/26:38:08]  Acc_iter 1200        Data time: 0.00(0.07)  Forward time: 3.23(3.16)  Batch time: 3.23(3.23)
+2024-10-13 19:56:03,018   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 19:56:03 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45422 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 19:56:28,434   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 19:58:45,135   INFO  Train:    1/20 (  5%) [1249/1545 ( 81%)]  Loss: 12.06 (15.9)  LR: 1.225e-04  Time cost: 1:07:17/15:56 [1:13:40/26:36:17]  Acc_iter 1250        Data time: 0.00(0.07)  Forward time: 3.35(3.16)  Batch time: 3.36(3.23)
+2024-10-13 20:01:22,468   INFO  Train:    1/20 (  5%) [1299/1545 ( 84%)]  Loss: 11.37 (15.8)  LR: 1.243e-04  Time cost: 1:09:55/13:13 [1:16:18/26:32:00]  Acc_iter 1300        Data time: 0.00(0.06)  Forward time: 3.07(3.16)  Batch time: 3.07(3.23)
+2024-10-13 20:01:28,367   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:04:02,905   INFO  Train:    1/20 (  5%) [1349/1545 ( 87%)]  Loss: 11.95 (15.6)  LR: 1.262e-04  Time cost: 1:12:35/10:32 [1:18:58/26:28:59]  Acc_iter 1350        Data time: 0.00(0.06)  Forward time: 3.28(3.16)  Batch time: 3.28(3.23)
+2024-10-13 20:04:04,326   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:04:04 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 56°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 20:06:29,931   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:06:43,099   INFO  Train:    1/20 (  5%) [1399/1545 ( 91%)]  Loss: 10.87 (15.5)  LR: 1.282e-04  Time cost: 1:15:15/07:50 [1:21:38/26:25:54]  Acc_iter 1400        Data time: 0.00(0.06)  Forward time: 3.17(3.16)  Batch time: 3.17(3.22)
+2024-10-13 20:09:19,320   INFO  Train:    1/20 (  5%) [1449/1545 ( 94%)]  Loss: 10.83 (15.3)  LR: 1.302e-04  Time cost: 1:17:51/05:09 [1:24:15/26:21:30]  Acc_iter 1450        Data time: 0.00(0.06)  Forward time: 2.82(3.16)  Batch time: 2.82(3.22)
+2024-10-13 20:11:29,152   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:11:50,960   INFO  Train:    1/20 (  5%) [1499/1545 ( 97%)]  Loss: 10.65 (15.2)  LR: 1.323e-04  Time cost: 1:20:23/02:27 [1:26:46/26:15:44]  Acc_iter 1500        Data time: 0.00(0.06)  Forward time: 3.10(3.15)  Batch time: 3.10(3.21)
+2024-10-13 20:11:52,406   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:11:52 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 20:14:03,082   INFO  Train:    1/20 (  5%) [1544/1545 (100%)]  Loss: 11.78 (15.1)  LR: 1.342e-04  Time cost: 1:22:35/00:03 [1:28:58/26:09:20]  Acc_iter 1545        Data time: 0.00(0.06)  Forward time: 1.89(3.15)  Batch time: 1.89(3.21)
+2024-10-13 20:17:34,672   INFO  Train:    2/20 ( 10%) [   0/1545 (  0%)]  Loss: 11.58 (11.6)  LR: 1.343e-04  Time cost: 00:14/6:16:11 [1:32:30/119:07:41]  Acc_iter 1546        Data time: 8.55(8.55)  Forward time: 4.96(4.96)  Batch time: 13.52(13.52)
+2024-10-13 20:17:53,597   INFO  Train:    2/20 ( 10%) [   4/1545 (  0%)]  Loss: 11.63 (11.3)  LR: 1.344e-04  Time cost: 00:33/2:52:15 [1:32:49/54:40:54]  Acc_iter 1550        Data time: 0.21(2.05)  Forward time: 3.90(4.52)  Batch time: 4.11(6.56)
+2024-10-13 20:20:29,585   INFO  Train:    2/20 ( 10%) [  54/1545 (  3%)]  Loss: 12.06 (11.2)  LR: 1.367e-04  Time cost: 03:09/1:25:37 [1:35:25/28:02:47]  Acc_iter 1600        Data time: 0.00(0.23)  Forward time: 2.64(3.20)  Batch time: 2.65(3.43)
+2024-10-13 20:22:21,872   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:23:08,722   INFO  Train:    2/20 ( 10%) [ 104/1545 (  7%)]  Loss: 11.07 (11.2)  LR: 1.390e-04  Time cost: 05:48/1:19:44 [1:38:04/26:58:49]  Acc_iter 1650        Data time: 0.00(0.14)  Forward time: 3.20(3.17)  Batch time: 3.21(3.31)
+2024-10-13 20:23:10,123   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:23:10 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 20:25:47,196   INFO  Train:    2/20 ( 10%) [ 154/1545 ( 10%)]  Loss: 10.97 (11.1)  LR: 1.413e-04  Time cost: 08:27/1:15:51 [1:40:42/26:32:20]  Acc_iter 1700        Data time: 0.00(0.12)  Forward time: 3.04(3.15)  Batch time: 3.04(3.27)
+2024-10-13 20:27:23,922   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:28:23,787   INFO  Train:    2/20 ( 10%) [ 204/1545 ( 13%)]  Loss: 10.91 (11.0)  LR: 1.437e-04  Time cost: 11:03/1:12:21 [1:43:19/26:13:01]  Acc_iter 1750        Data time: 0.00(0.10)  Forward time: 2.99(3.13)  Batch time: 2.99(3.23)
+2024-10-13 20:31:00,793   INFO  Train:    2/20 ( 10%) [ 254/1545 ( 16%)]  Loss: 10.70 (11.0)  LR: 1.462e-04  Time cost: 13:40/1:09:15 [1:45:56/26:01:03]  Acc_iter 1800        Data time: 0.00(0.10)  Forward time: 2.64(3.12)  Batch time: 2.64(3.22)
+2024-10-13 20:31:02,190   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:31:02 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 20:32:22,292   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:33:44,437   INFO  Train:    2/20 ( 10%) [ 304/1545 ( 20%)]  Loss: 10.80 (10.9)  LR: 1.488e-04  Time cost: 16:24/1:06:45 [1:48:40/26:02:40]  Acc_iter 1850        Data time: 0.05(0.09)  Forward time: 3.28(3.14)  Batch time: 3.32(3.23)
+2024-10-13 20:36:22,331   INFO  Train:    2/20 ( 10%) [ 354/1545 ( 23%)]  Loss: 10.64 (10.9)  LR: 1.514e-04  Time cost: 19:02/1:03:52 [1:51:18/25:55:15]  Acc_iter 1900        Data time: 0.01(0.08)  Forward time: 3.41(3.13)  Batch time: 3.41(3.22)
+2024-10-13 20:37:20,655   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:39:02,372   INFO  Train:    2/20 ( 10%) [ 404/1545 ( 26%)]  Loss: 10.51 (10.8)  LR: 1.541e-04  Time cost: 21:42/1:01:08 [1:53:58/25:51:34]  Acc_iter 1950        Data time: 0.00(0.08)  Forward time: 3.03(3.14)  Batch time: 3.03(3.21)
+2024-10-13 20:39:03,783   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:39:03 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45064 / 46068 MB |
+
+2024-10-13 20:41:44,537   INFO  Train:    2/20 ( 10%) [ 454/1545 ( 29%)]  Loss: 11.02 (10.8)  LR: 1.568e-04  Time cost: 24:24/58:31 [1:56:40/25:50:21]  Acc_iter 2000        Data time: 0.06(0.07)  Forward time: 3.32(3.14)  Batch time: 3.38(3.22)
+2024-10-13 20:42:23,861   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:44:21,567   INFO  Train:    2/20 ( 10%) [ 504/1545 ( 33%)]  Loss: 10.30 (10.7)  LR: 1.597e-04  Time cost: 27:01/55:42 [1:59:17/25:43:57]  Acc_iter 2050        Data time: 0.00(0.07)  Forward time: 3.17(3.14)  Batch time: 3.18(3.21)
+2024-10-13 20:47:01,325   INFO  Train:    2/20 ( 10%) [ 554/1545 ( 36%)]  Loss: 9.868 (10.7)  LR: 1.625e-04  Time cost: 29:41/53:00 [2:01:57/25:40:36]  Acc_iter 2100        Data time: 0.01(0.06)  Forward time: 3.06(3.14)  Batch time: 3.07(3.21)
+2024-10-13 20:47:02,702   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:47:02 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 20:47:22,790   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:49:37,691   INFO  Train:    2/20 ( 10%) [ 604/1545 ( 39%)]  Loss: 10.85 (10.7)  LR: 1.655e-04  Time cost: 32:17/50:13 [2:04:33/25:34:40]  Acc_iter 2150        Data time: 0.18(0.06)  Forward time: 2.68(3.14)  Batch time: 2.86(3.20)
+2024-10-13 20:52:15,734   INFO  Train:    2/20 ( 10%) [ 654/1545 ( 42%)]  Loss: 10.25 (10.6)  LR: 1.685e-04  Time cost: 34:55/47:30 [2:07:11/25:30:28]  Acc_iter 2200        Data time: 0.07(0.06)  Forward time: 3.15(3.13)  Batch time: 3.23(3.20)
+2024-10-13 20:52:22,432   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:54:52,009   INFO  Train:    2/20 ( 10%) [ 704/1545 ( 46%)]  Loss: 10.13 (10.6)  LR: 1.715e-04  Time cost: 37:31/44:46 [2:09:47/25:25:18]  Acc_iter 2250        Data time: 0.07(0.06)  Forward time: 3.01(3.13)  Batch time: 3.08(3.19)
+2024-10-13 20:54:53,433   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 20:54:53 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 20:57:21,378   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 20:57:34,488   INFO  Train:    2/20 ( 10%) [ 754/1545 ( 49%)]  Loss: 10.26 (10.6)  LR: 1.747e-04  Time cost: 40:14/42:09 [2:12:30/25:24:23]  Acc_iter 2300        Data time: 0.00(0.06)  Forward time: 3.24(3.13)  Batch time: 3.24(3.20)
+2024-10-13 21:00:09,901   INFO  Train:    2/20 ( 10%) [ 804/1545 ( 52%)]  Loss: 10.13 (10.5)  LR: 1.779e-04  Time cost: 42:49/39:25 [2:15:05/25:19:04]  Acc_iter 2350        Data time: 0.00(0.06)  Forward time: 3.04(3.13)  Batch time: 3.04(3.19)
+2024-10-13 21:02:22,228   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:02:46,451   INFO  Train:    2/20 ( 10%) [ 854/1545 ( 55%)]  Loss: 9.770 (10.5)  LR: 1.811e-04  Time cost: 45:26/36:43 [2:17:42/25:14:42]  Acc_iter 2400        Data time: 0.05(0.06)  Forward time: 3.53(3.13)  Batch time: 3.58(3.19)
+2024-10-13 21:02:48,204   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:02:47 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45444 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:05:24,876   INFO  Train:    2/20 ( 10%) [ 904/1545 ( 59%)]  Loss: 10.34 (10.5)  LR: 1.844e-04  Time cost: 48:04/34:03 [2:20:20/25:11:31]  Acc_iter 2450        Data time: 0.01(0.06)  Forward time: 3.29(3.13)  Batch time: 3.29(3.19)
+2024-10-13 21:07:20,802   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:07:58,984   INFO  Train:    2/20 ( 10%) [ 954/1545 ( 62%)]  Loss: 10.33 (10.4)  LR: 1.878e-04  Time cost: 50:38/31:20 [2:22:54/25:06:15]  Acc_iter 2500        Data time: 0.01(0.06)  Forward time: 3.04(3.12)  Batch time: 3.05(3.18)
+2024-10-13 21:10:35,832   INFO  Train:    2/20 ( 10%) [1004/1545 ( 65%)]  Loss: 9.525 (10.4)  LR: 1.912e-04  Time cost: 53:15/28:40 [2:25:31/25:02:32]  Acc_iter 2550        Data time: 0.27(0.06)  Forward time: 3.23(3.12)  Batch time: 3.50(3.18)
+2024-10-13 21:10:37,243   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:10:37 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 44406 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:12:22,740   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:13:16,796   INFO  Train:    2/20 ( 10%) [1054/1545 ( 68%)]  Loss: 9.759 (10.4)  LR: 1.947e-04  Time cost: 55:56/26:02 [2:28:12/25:00:46]  Acc_iter 2600        Data time: 0.00(0.06)  Forward time: 2.63(3.12)  Batch time: 2.63(3.18)
+2024-10-13 21:15:53,357   INFO  Train:    2/20 ( 10%) [1104/1545 ( 71%)]  Loss: 9.120 (10.3)  LR: 1.982e-04  Time cost: 58:33/23:22 [2:30:49/24:57:02]  Acc_iter 2650        Data time: 0.00(0.06)  Forward time: 3.16(3.12)  Batch time: 3.16(3.18)
+2024-10-13 21:17:22,236   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:18:33,824   INFO  Train:    2/20 ( 10%) [1154/1545 ( 75%)]  Loss: 9.408 (10.3)  LR: 2.018e-04  Time cost: 1:01:13/20:43 [2:33:29/24:55:00]  Acc_iter 2700        Data time: 0.00(0.06)  Forward time: 3.39(3.12)  Batch time: 3.40(3.18)
+2024-10-13 21:18:35,262   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:18:35 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:21:12,580   INFO  Train:    2/20 ( 10%) [1204/1545 ( 78%)]  Loss: 9.259 (10.3)  LR: 2.055e-04  Time cost: 1:03:52/18:04 [2:36:08/24:52:14]  Acc_iter 2750        Data time: 0.00(0.06)  Forward time: 2.93(3.12)  Batch time: 2.94(3.18)
+2024-10-13 21:22:23,172   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:23:51,288   INFO  Train:    2/20 ( 10%) [1254/1545 ( 81%)]  Loss: 9.097 (10.3)  LR: 2.092e-04  Time cost: 1:06:31/15:25 [2:38:47/24:49:28]  Acc_iter 2800        Data time: 0.00(0.06)  Forward time: 3.07(3.12)  Batch time: 3.08(3.18)
+2024-10-13 21:26:28,620   INFO  Train:    2/20 ( 10%) [1304/1545 ( 84%)]  Loss: 9.509 (10.2)  LR: 2.129e-04  Time cost: 1:09:08/12:46 [2:41:24/24:46:13]  Acc_iter 2850        Data time: 0.00(0.06)  Forward time: 3.08(3.12)  Batch time: 3.08(3.18)
+2024-10-13 21:26:30,064   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:26:30 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:27:22,805   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:29:07,191   INFO  Train:    2/20 ( 10%) [1354/1545 ( 88%)]  Loss: 9.393 (10.2)  LR: 2.167e-04  Time cost: 1:11:47/10:07 [2:44:02/24:43:26]  Acc_iter 2900        Data time: 0.00(0.06)  Forward time: 3.20(3.12)  Batch time: 3.21(3.18)
+2024-10-13 21:31:45,020   INFO  Train:    2/20 ( 10%) [1404/1545 ( 91%)]  Loss: 9.359 (10.2)  LR: 2.206e-04  Time cost: 1:14:24/07:28 [2:46:40/24:40:25]  Acc_iter 2950        Data time: 0.53(0.06)  Forward time: 2.90(3.12)  Batch time: 3.43(3.18)
+2024-10-13 21:32:23,211   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:34:20,864   INFO  Train:    2/20 ( 10%) [1454/1545 ( 94%)]  Loss: 9.420 (10.2)  LR: 2.245e-04  Time cost: 1:17:00/04:48 [2:49:16/24:36:48]  Acc_iter 3000        Data time: 0.01(0.06)  Forward time: 3.34(3.12)  Batch time: 3.35(3.18)
+2024-10-13 21:34:22,317   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:34:22 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45588 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:37:02,221   INFO  Train:    2/20 ( 10%) [1504/1545 ( 97%)]  Loss: 9.765 (10.1)  LR: 2.285e-04  Time cost: 1:19:42/02:10 [2:51:57/24:34:56]  Acc_iter 3050        Data time: 0.00(0.06)  Forward time: 3.12(3.12)  Batch time: 3.12(3.18)
+2024-10-13 21:37:21,383   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:38:58,398   INFO  Train:    2/20 ( 10%) [1544/1545 (100%)]  Loss: 9.640 (10.1)  LR: 2.317e-04  Time cost: 1:21:38/00:03 [2:53:54/24:29:33]  Acc_iter 3090        Data time: 0.01(0.06)  Forward time: 1.83(3.11)  Batch time: 1.83(3.17)
+2024-10-13 21:42:38,375   INFO  Train:    3/20 ( 15%) [   0/1545 (  0%)]  Loss: 9.613 (9.61)  LR: 2.318e-04  Time cost: 00:20/8:53:54 [2:57:34/160:10:28]  Acc_iter 3091        Data time: 13.91(13.91)  Forward time: 7.29(7.29)  Batch time: 21.20(21.20)
+2024-10-13 21:43:09,329   INFO  Train:    3/20 ( 15%) [   9/1545 (  1%)]  Loss: 9.094 (9.46)  LR: 2.325e-04  Time cost: 00:51/2:12:19 [2:58:05/39:55:01]  Acc_iter 3100        Data time: 0.02(1.52)  Forward time: 3.66(3.73)  Batch time: 3.68(5.24)
+2024-10-13 21:45:46,465   INFO  Train:    3/20 ( 15%) [  59/1545 (  4%)]  Loss: 9.257 (9.39)  LR: 2.366e-04  Time cost: 03:28/1:26:11 [3:00:42/26:49:44]  Acc_iter 3150        Data time: 0.09(0.31)  Forward time: 3.49(3.18)  Batch time: 3.58(3.49)
+2024-10-13 21:45:47,917   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:45:47 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:47:20,905   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:48:25,659   INFO  Train:    3/20 ( 15%) [ 109/1545 (  7%)]  Loss: 9.384 (9.36)  LR: 2.407e-04  Time cost: 06:08/1:20:04 [3:03:21/25:44:37]  Acc_iter 3200        Data time: 0.01(0.21)  Forward time: 3.09(3.14)  Batch time: 3.09(3.35)
+2024-10-13 21:51:04,429   INFO  Train:    3/20 ( 15%) [ 159/1545 ( 10%)]  Loss: 9.244 (9.33)  LR: 2.449e-04  Time cost: 08:46/1:16:03 [3:06:00/25:17:18]  Acc_iter 3250        Data time: 0.00(0.16)  Forward time: 3.26(3.13)  Batch time: 3.26(3.30)
+2024-10-13 21:52:18,152   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:53:41,264   INFO  Train:    3/20 ( 15%) [ 209/1545 ( 14%)]  Loss: 9.106 (9.32)  LR: 2.491e-04  Time cost: 11:23/1:12:29 [3:08:37/24:57:30]  Acc_iter 3300        Data time: 0.00(0.14)  Forward time: 2.98(3.12)  Batch time: 2.99(3.26)
+2024-10-13 21:53:42,705   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 21:53:42 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 21:56:18,912   INFO  Train:    3/20 ( 15%) [ 259/1545 ( 17%)]  Loss: 8.765 (9.28)  LR: 2.534e-04  Time cost: 14:01/1:09:21 [3:11:14/24:45:45]  Acc_iter 3350        Data time: 0.00(0.12)  Forward time: 3.36(3.12)  Batch time: 3.36(3.24)
+2024-10-13 21:57:18,303   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 21:58:56,351   INFO  Train:    3/20 ( 15%) [ 309/1545 ( 20%)]  Loss: 8.738 (9.27)  LR: 2.577e-04  Time cost: 16:38/1:06:21 [3:13:52/24:36:38]  Acc_iter 3400        Data time: 0.00(0.11)  Forward time: 2.99(3.11)  Batch time: 2.99(3.22)
+2024-10-13 22:01:31,086   INFO  Train:    3/20 ( 15%) [ 359/1545 ( 23%)]  Loss: 8.480 (9.27)  LR: 2.621e-04  Time cost: 19:13/1:03:19 [3:16:26/24:25:53]  Acc_iter 3450        Data time: 0.00(0.10)  Forward time: 3.33(3.10)  Batch time: 3.34(3.21)
+2024-10-13 22:01:32,515   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:01:32 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:02:20,005   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:04:09,897   INFO  Train:    3/20 ( 15%) [ 409/1545 ( 26%)]  Loss: 9.238 (9.24)  LR: 2.665e-04  Time cost: 21:52/1:00:35 [3:19:05/24:21:40]  Acc_iter 3500        Data time: 0.01(0.10)  Forward time: 3.08(3.10)  Batch time: 3.10(3.20)
+2024-10-13 22:06:47,578   INFO  Train:    3/20 ( 15%) [ 459/1545 ( 30%)]  Loss: 9.198 (9.23)  LR: 2.710e-04  Time cost: 24:29/57:50 [3:21:43/24:16:40]  Acc_iter 3550        Data time: 0.01(0.09)  Forward time: 2.93(3.11)  Batch time: 2.93(3.20)
+2024-10-13 22:07:21,031   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:09:21,514   INFO  Train:    3/20 ( 15%) [ 509/1545 ( 33%)]  Loss: 9.023 (9.22)  LR: 2.755e-04  Time cost: 27:03/54:58 [3:24:17/24:08:48]  Acc_iter 3600        Data time: 0.00(0.09)  Forward time: 3.06(3.10)  Batch time: 3.07(3.19)
+2024-10-13 22:09:22,934   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:09:22 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45386 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:12:07,353   INFO  Train:    3/20 ( 15%) [ 559/1545 ( 36%)]  Loss: 9.399 (9.22)  LR: 2.801e-04  Time cost: 29:49/52:31 [3:27:03/24:11:31]  Acc_iter 3650        Data time: 0.01(0.09)  Forward time: 3.56(3.11)  Batch time: 3.57(3.20)
+2024-10-13 22:12:20,594   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:14:43,790   INFO  Train:    3/20 ( 15%) [ 609/1545 ( 39%)]  Loss: 8.717 (9.20)  LR: 2.847e-04  Time cost: 32:26/49:46 [3:29:39/24:06:22]  Acc_iter 3700        Data time: 0.42(0.08)  Forward time: 2.74(3.11)  Batch time: 3.16(3.19)
+2024-10-13 22:17:21,243   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:17:24,437   INFO  Train:    3/20 ( 15%) [ 659/1545 ( 43%)]  Loss: 8.747 (9.18)  LR: 2.893e-04  Time cost: 35:06/47:08 [3:32:20/24:04:29]  Acc_iter 3750        Data time: 0.12(0.08)  Forward time: 3.49(3.11)  Batch time: 3.60(3.19)
+2024-10-13 22:17:25,849   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:17:25 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:20:06,073   INFO  Train:    3/20 ( 15%) [ 709/1545 ( 46%)]  Loss: 8.722 (9.16)  LR: 2.940e-04  Time cost: 37:48/44:30 [3:35:01/24:03:07]  Acc_iter 3800        Data time: 0.00(0.08)  Forward time: 3.13(3.12)  Batch time: 3.13(3.20)
+2024-10-13 22:22:21,056   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:22:44,409   INFO  Train:    3/20 ( 15%) [ 759/1545 ( 49%)]  Loss: 8.741 (9.15)  LR: 2.987e-04  Time cost: 40:26/41:49 [3:37:40/23:59:37]  Acc_iter 3850        Data time: 0.00(0.08)  Forward time: 3.37(3.12)  Batch time: 3.38(3.19)
+2024-10-13 22:25:22,591   INFO  Train:    3/20 ( 15%) [ 809/1545 ( 52%)]  Loss: 8.542 (9.13)  LR: 3.035e-04  Time cost: 43:04/39:08 [3:40:18/23:56:08]  Acc_iter 3900        Data time: 0.00(0.08)  Forward time: 3.04(3.12)  Batch time: 3.05(3.19)
+2024-10-13 22:25:24,044   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:25:24 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:27:19,751   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:28:00,721   INFO  Train:    3/20 ( 15%) [ 859/1545 ( 56%)]  Loss: 9.002 (9.11)  LR: 3.083e-04  Time cost: 45:43/36:28 [3:42:56/23:52:43]  Acc_iter 3950        Data time: 0.00(0.08)  Forward time: 3.31(3.12)  Batch time: 3.32(3.19)
+2024-10-13 22:30:39,025   INFO  Train:    3/20 ( 15%) [ 909/1545 ( 59%)]  Loss: 8.711 (9.09)  LR: 3.131e-04  Time cost: 48:21/33:47 [3:45:34/23:49:29]  Acc_iter 4000        Data time: 0.14(0.07)  Forward time: 2.97(3.12)  Batch time: 3.12(3.19)
+2024-10-13 22:32:20,056   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:33:21,884   INFO  Train:    3/20 ( 15%) [ 959/1545 ( 62%)]  Loss: 8.230 (9.08)  LR: 3.180e-04  Time cost: 51:04/31:10 [3:48:17/23:48:26]  Acc_iter 4050        Data time: 0.00(0.07)  Forward time: 3.38(3.12)  Batch time: 3.39(3.19)
+2024-10-13 22:33:23,326   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:33:23 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:35:57,825   INFO  Train:    3/20 ( 15%) [1009/1545 ( 65%)]  Loss: 8.781 (9.06)  LR: 3.229e-04  Time cost: 53:40/28:28 [3:50:53/23:44:09]  Acc_iter 4100        Data time: 0.07(0.07)  Forward time: 3.41(3.12)  Batch time: 3.48(3.19)
+2024-10-13 22:37:18,339   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:38:39,458   INFO  Train:    3/20 ( 15%) [1059/1545 ( 69%)]  Loss: 8.475 (9.05)  LR: 3.279e-04  Time cost: 56:21/25:50 [3:53:35/23:42:26]  Acc_iter 4150        Data time: 0.00(0.07)  Forward time: 3.17(3.12)  Batch time: 3.17(3.19)
+2024-10-13 22:41:16,768   INFO  Train:    3/20 ( 15%) [1109/1545 ( 72%)]  Loss: 8.278 (9.03)  LR: 3.329e-04  Time cost: 58:59/23:10 [3:56:12/23:38:53]  Acc_iter 4200        Data time: 0.01(0.07)  Forward time: 2.68(3.12)  Batch time: 2.68(3.19)
+2024-10-13 22:41:18,189   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:41:18 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:42:19,436   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:43:56,736   INFO  Train:    3/20 ( 15%) [1159/1545 ( 75%)]  Loss: 8.086 (9.02)  LR: 3.379e-04  Time cost: 1:01:39/20:30 [3:58:52/23:36:26]  Acc_iter 4250        Data time: 0.04(0.07)  Forward time: 2.65(3.12)  Batch time: 2.68(3.19)
+2024-10-13 22:46:33,628   INFO  Train:    3/20 ( 15%) [1209/1545 ( 78%)]  Loss: 8.002 (9.00)  LR: 3.430e-04  Time cost: 1:04:15/17:50 [4:01:29/23:32:51]  Acc_iter 4300        Data time: 0.00(0.07)  Forward time: 3.17(3.12)  Batch time: 3.18(3.19)
+2024-10-13 22:47:19,208   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:49:09,318   INFO  Train:    3/20 ( 15%) [1259/1545 ( 81%)]  Loss: 8.421 (8.99)  LR: 3.481e-04  Time cost: 1:06:51/15:10 [4:04:05/23:28:54]  Acc_iter 4350        Data time: 0.00(0.07)  Forward time: 3.29(3.12)  Batch time: 3.29(3.18)
+2024-10-13 22:49:10,811   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:49:10 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 56°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:51:49,171   INFO  Train:    3/20 ( 15%) [1309/1545 ( 85%)]  Loss: 8.371 (8.98)  LR: 3.532e-04  Time cost: 1:09:31/12:31 [4:06:44/23:26:29]  Acc_iter 4400        Data time: 0.53(0.07)  Forward time: 3.10(3.12)  Batch time: 3.63(3.18)
+2024-10-13 22:52:19,720   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:54:28,549   INFO  Train:    3/20 ( 15%) [1359/1545 ( 88%)]  Loss: 9.134 (8.97)  LR: 3.583e-04  Time cost: 1:12:10/09:52 [4:09:24/23:23:52]  Acc_iter 4450        Data time: 0.00(0.07)  Forward time: 3.55(3.12)  Batch time: 3.56(3.19)
+2024-10-13 22:57:08,592   INFO  Train:    3/20 ( 15%) [1409/1545 ( 91%)]  Loss: 8.572 (8.95)  LR: 3.635e-04  Time cost: 1:14:50/07:13 [4:12:04/23:21:29]  Acc_iter 4500        Data time: 0.00(0.07)  Forward time: 3.18(3.12)  Batch time: 3.18(3.19)
+2024-10-13 22:57:10,102   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 22:57:10 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 22:57:19,981   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 22:59:48,234   INFO  Train:    3/20 ( 15%) [1459/1545 ( 94%)]  Loss: 8.296 (8.94)  LR: 3.687e-04  Time cost: 1:17:30/04:33 [4:14:43/23:18:56]  Acc_iter 4550        Data time: 0.33(0.07)  Forward time: 3.55(3.12)  Batch time: 3.88(3.19)
+2024-10-13 23:02:19,903   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:02:29,409   INFO  Train:    3/20 ( 15%) [1509/1545 ( 98%)]  Loss: 8.577 (8.93)  LR: 3.740e-04  Time cost: 1:20:11/01:54 [4:17:25/23:16:50]  Acc_iter 4600        Data time: 0.00(0.06)  Forward time: 3.07(3.12)  Batch time: 3.08(3.19)
+2024-10-13 23:04:10,539   INFO  Train:    3/20 ( 15%) [1544/1545 (100%)]  Loss: 8.630 (8.92)  LR: 3.777e-04  Time cost: 1:21:52/00:03 [4:19:06/23:12:02]  Acc_iter 4635        Data time: 0.00(0.06)  Forward time: 1.85(3.12)  Batch time: 1.86(3.18)
+2024-10-13 23:07:50,115   INFO  Train:    4/20 ( 20%) [   0/1545 (  0%)]  Loss: 8.620 (8.62)  LR: 3.778e-04  Time cost: 00:22/9:32:36 [4:22:45/162:14:25]  Acc_iter 4636        Data time: 12.23(12.23)  Forward time: 7.80(7.80)  Batch time: 20.02(20.02)
+2024-10-13 23:08:38,156   INFO  Train:    4/20 ( 20%) [  14/1545 (  1%)]  Loss: 8.211 (8.39)  LR: 3.793e-04  Time cost: 01:10/1:59:33 [4:23:33/34:09:52]  Acc_iter 4650        Data time: 0.00(0.96)  Forward time: 3.20(3.63)  Batch time: 3.21(4.59)
+2024-10-13 23:08:39,533   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:08:39 2024  555.42.06
+[0] NVIDIA A40 | 48°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 49°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 55°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 54°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 23:11:13,486   INFO  Train:    4/20 ( 20%) [  64/1545 (  4%)]  Loss: 8.826 (8.46)  LR: 3.846e-04  Time cost: 03:45/1:25:40 [4:26:09/25:15:41]  Acc_iter 4700        Data time: 0.00(0.28)  Forward time: 3.53(3.17)  Batch time: 3.53(3.45)
+2024-10-13 23:12:28,636   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:13:50,375   INFO  Train:    4/20 ( 20%) [ 114/1545 (  7%)]  Loss: 8.549 (8.47)  LR: 3.899e-04  Time cost: 06:22/1:19:19 [4:28:46/24:09:39]  Acc_iter 4750        Data time: 0.00(0.18)  Forward time: 2.88(3.13)  Batch time: 2.89(3.31)
+2024-10-13 23:16:26,508   INFO  Train:    4/20 ( 20%) [ 164/1545 ( 11%)]  Loss: 8.296 (8.45)  LR: 3.953e-04  Time cost: 08:58/1:15:08 [4:31:22/23:40:04]  Acc_iter 4800        Data time: 0.05(0.13)  Forward time: 3.53(3.12)  Batch time: 3.57(3.26)
+2024-10-13 23:16:27,935   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:16:27 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45432 / 46068 MB |
+
+2024-10-13 23:17:29,837   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:19:06,383   INFO  Train:    4/20 ( 20%) [ 214/1545 ( 14%)]  Loss: 8.581 (8.43)  LR: 4.006e-04  Time cost: 11:38/1:12:04 [4:34:02/23:30:36]  Acc_iter 4850        Data time: 0.00(0.11)  Forward time: 3.09(3.13)  Batch time: 3.09(3.24)
+2024-10-13 23:21:45,125   INFO  Train:    4/20 ( 20%) [ 264/1545 ( 17%)]  Loss: 8.424 (8.43)  LR: 4.061e-04  Time cost: 14:17/1:09:03 [4:36:40/23:21:50]  Acc_iter 4900        Data time: 0.22(0.10)  Forward time: 3.22(3.13)  Batch time: 3.43(3.23)
+2024-10-13 23:22:28,494   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:24:26,837   INFO  Train:    4/20 ( 20%) [ 314/1545 ( 20%)]  Loss: 8.814 (8.41)  LR: 4.115e-04  Time cost: 16:58/1:06:22 [4:39:22/23:19:06]  Acc_iter 4950        Data time: 0.01(0.09)  Forward time: 3.01(3.14)  Batch time: 3.01(3.23)
+2024-10-13 23:24:28,244   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:24:28 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45460 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 56°C, 100 % | 45440 / 46068 MB |
+
+2024-10-13 23:27:03,902   INFO  Train:    4/20 ( 20%) [ 364/1545 ( 24%)]  Loss: 7.940 (8.40)  LR: 4.169e-04  Time cost: 19:36/1:03:25 [4:41:59/23:10:52]  Acc_iter 5000        Data time: 0.00(0.08)  Forward time: 3.17(3.14)  Batch time: 3.17(3.22)
+2024-10-13 23:27:29,114   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:29:41,231   INFO  Train:    4/20 ( 20%) [ 414/1545 ( 27%)]  Loss: 7.633 (8.38)  LR: 4.224e-04  Time cost: 22:13/1:00:33 [4:44:36/23:04:16]  Acc_iter 5050        Data time: 0.20(0.08)  Forward time: 3.17(3.13)  Batch time: 3.37(3.21)
+2024-10-13 23:32:22,476   INFO  Train:    4/20 ( 20%) [ 464/1545 ( 30%)]  Loss: 8.252 (8.35)  LR: 4.279e-04  Time cost: 24:54/57:54 [4:47:18/23:02:09]  Acc_iter 5100        Data time: 0.00(0.08)  Forward time: 3.08(3.14)  Batch time: 3.08(3.21)
+2024-10-13 23:32:23,890   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:32:23 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45478 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-13 23:32:30,366   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:35:02,658   INFO  Train:    4/20 ( 20%) [ 514/1545 ( 33%)]  Loss: 8.268 (8.34)  LR: 4.334e-04  Time cost: 27:34/55:12 [4:49:58/22:59:02]  Acc_iter 5150        Data time: 0.11(0.07)  Forward time: 2.73(3.14)  Batch time: 2.85(3.21)
+2024-10-13 23:37:31,497   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:37:38,080   INFO  Train:    4/20 ( 20%) [ 564/1545 ( 37%)]  Loss: 8.568 (8.33)  LR: 4.390e-04  Time cost: 30:10/52:23 [4:52:33/22:52:23]  Acc_iter 5200        Data time: 0.00(0.07)  Forward time: 3.41(3.13)  Batch time: 3.41(3.20)
+2024-10-13 23:40:15,177   INFO  Train:    4/20 ( 20%) [ 614/1545 ( 40%)]  Loss: 8.338 (8.31)  LR: 4.445e-04  Time cost: 32:47/49:38 [4:55:10/22:47:33]  Acc_iter 5250        Data time: 0.00(0.07)  Forward time: 3.21(3.13)  Batch time: 3.21(3.20)
+2024-10-13 23:40:16,654   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:40:16 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-13 23:42:29,870   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:42:55,166   INFO  Train:    4/20 ( 20%) [ 664/1545 ( 43%)]  Loss: 8.096 (8.30)  LR: 4.501e-04  Time cost: 35:27/46:58 [4:57:50/22:44:55]  Acc_iter 5300        Data time: 0.00(0.07)  Forward time: 3.57(3.13)  Batch time: 3.58(3.20)
+2024-10-13 23:45:32,946   INFO  Train:    4/20 ( 20%) [ 714/1545 ( 46%)]  Loss: 8.509 (8.28)  LR: 4.557e-04  Time cost: 38:05/44:15 [5:00:28/22:40:58]  Acc_iter 5350        Data time: 0.00(0.07)  Forward time: 3.17(3.13)  Batch time: 3.17(3.19)
+2024-10-13 23:47:28,774   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:48:13,332   INFO  Train:    4/20 ( 20%) [ 764/1545 ( 49%)]  Loss: 8.216 (8.27)  LR: 4.613e-04  Time cost: 40:45/41:36 [5:03:09/22:38:38]  Acc_iter 5400        Data time: 0.00(0.07)  Forward time: 3.38(3.13)  Batch time: 3.39(3.19)
+2024-10-13 23:48:14,786   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:48:14 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-13 23:50:49,772   INFO  Train:    4/20 ( 20%) [ 814/1545 ( 53%)]  Loss: 8.750 (8.25)  LR: 4.669e-04  Time cost: 43:21/38:53 [5:05:45/22:34:12]  Acc_iter 5450        Data time: 0.01(0.07)  Forward time: 3.11(3.13)  Batch time: 3.12(3.19)
+2024-10-13 23:52:28,660   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:53:25,360   INFO  Train:    4/20 ( 20%) [ 864/1545 ( 56%)]  Loss: 8.166 (8.24)  LR: 4.725e-04  Time cost: 45:57/36:10 [5:08:21/22:29:34]  Acc_iter 5500        Data time: 0.01(0.07)  Forward time: 3.23(3.12)  Batch time: 3.24(3.19)
+2024-10-13 23:56:01,542   INFO  Train:    4/20 ( 20%) [ 914/1545 ( 59%)]  Loss: 8.363 (8.22)  LR: 4.781e-04  Time cost: 48:33/33:29 [5:10:57/22:25:26]  Acc_iter 5550        Data time: 0.00(0.06)  Forward time: 2.78(3.12)  Batch time: 2.78(3.18)
+2024-10-13 23:56:03,000   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Sun Oct 13 23:56:02 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-13 23:57:29,526   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-13 23:58:38,924   INFO  Train:    4/20 ( 20%) [ 964/1545 ( 62%)]  Loss: 7.833 (8.20)  LR: 4.838e-04  Time cost: 51:11/30:48 [5:13:34/22:21:58]  Acc_iter 5600        Data time: 0.22(0.06)  Forward time: 2.80(3.12)  Batch time: 3.02(3.18)
+2024-10-14 00:01:18,911   INFO  Train:    4/20 ( 20%) [1014/1545 ( 66%)]  Loss: 7.942 (8.19)  LR: 4.894e-04  Time cost: 53:51/28:10 [5:16:14/22:19:41]  Acc_iter 5650        Data time: 0.02(0.06)  Forward time: 2.81(3.12)  Batch time: 2.83(3.18)
+2024-10-14 00:02:29,044   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:03:56,396   INFO  Train:    4/20 ( 20%) [1064/1545 ( 69%)]  Loss: 7.655 (8.17)  LR: 4.951e-04  Time cost: 56:28/25:30 [5:18:52/22:16:22]  Acc_iter 5700        Data time: 0.00(0.06)  Forward time: 2.97(3.12)  Batch time: 2.98(3.18)
+2024-10-14 00:03:57,818   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:03:57 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:06:35,881   INFO  Train:    4/20 ( 20%) [1114/1545 ( 72%)]  Loss: 8.023 (8.16)  LR: 5.008e-04  Time cost: 59:08/22:51 [5:21:31/22:13:52]  Acc_iter 5750        Data time: 0.04(0.06)  Forward time: 3.45(3.12)  Batch time: 3.48(3.18)
+2024-10-14 00:07:28,833   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:09:14,366   INFO  Train:    4/20 ( 20%) [1164/1545 ( 75%)]  Loss: 8.091 (8.15)  LR: 5.065e-04  Time cost: 1:01:46/20:12 [5:24:10/22:10:59]  Acc_iter 5800        Data time: 0.23(0.06)  Forward time: 3.12(3.12)  Batch time: 3.35(3.18)
+2024-10-14 00:11:54,263   INFO  Train:    4/20 ( 20%) [1214/1545 ( 79%)]  Loss: 7.790 (8.14)  LR: 5.122e-04  Time cost: 1:04:26/17:33 [5:26:50/22:08:37]  Acc_iter 5850        Data time: 0.00(0.06)  Forward time: 3.10(3.12)  Batch time: 3.11(3.18)
+2024-10-14 00:11:55,719   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:11:55 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:12:31,431   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:14:32,194   INFO  Train:    4/20 ( 20%) [1264/1545 ( 82%)]  Loss: 7.449 (8.12)  LR: 5.179e-04  Time cost: 1:07:04/14:53 [5:29:27/22:05:35]  Acc_iter 5900        Data time: 0.30(0.06)  Forward time: 3.43(3.12)  Batch time: 3.73(3.18)
+2024-10-14 00:17:10,381   INFO  Train:    4/20 ( 20%) [1314/1545 ( 85%)]  Loss: 7.829 (8.11)  LR: 5.236e-04  Time cost: 1:09:42/12:14 [5:32:06/22:02:39]  Acc_iter 5950        Data time: 0.00(0.06)  Forward time: 2.72(3.12)  Batch time: 2.72(3.18)
+2024-10-14 00:17:30,416   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:19:49,115   INFO  Train:    4/20 ( 20%) [1364/1545 ( 88%)]  Loss: 7.490 (8.10)  LR: 5.293e-04  Time cost: 1:12:21/09:35 [5:34:44/21:59:54]  Acc_iter 6000        Data time: 0.06(0.06)  Forward time: 2.64(3.12)  Batch time: 2.70(3.18)
+2024-10-14 00:19:50,526   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:19:50 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45480 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:22:27,022   INFO  Train:    4/20 ( 20%) [1414/1545 ( 92%)]  Loss: 7.637 (8.09)  LR: 5.350e-04  Time cost: 1:14:59/06:56 [5:37:22/21:56:56]  Acc_iter 6050        Data time: 0.00(0.06)  Forward time: 2.92(3.12)  Batch time: 2.93(3.18)
+2024-10-14 00:22:30,166   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:25:03,539   INFO  Train:    4/20 ( 20%) [1464/1545 ( 95%)]  Loss: 8.538 (8.08)  LR: 5.407e-04  Time cost: 1:17:35/04:17 [5:39:59/21:53:35]  Acc_iter 6100        Data time: 0.02(0.06)  Forward time: 3.01(3.12)  Batch time: 3.02(3.18)
+2024-10-14 00:27:30,628   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:27:40,748   INFO  Train:    4/20 ( 20%) [1514/1545 ( 98%)]  Loss: 7.791 (8.06)  LR: 5.465e-04  Time cost: 1:20:12/01:38 [5:42:36/21:50:29]  Acc_iter 6150        Data time: 0.00(0.06)  Forward time: 3.39(3.12)  Batch time: 3.39(3.18)
+2024-10-14 00:27:42,179   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:27:42 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:29:06,554   INFO  Train:    4/20 ( 20%) [1544/1545 (100%)]  Loss: 7.637 (8.06)  LR: 5.499e-04  Time cost: 1:21:38/00:03 [5:44:02/21:46:22]  Acc_iter 6180        Data time: 0.00(0.06)  Forward time: 1.87(3.11)  Batch time: 1.87(3.17)
+2024-10-14 00:32:46,462   INFO  Train:    5/20 ( 25%) [   0/1545 (  0%)]  Loss: 7.477 (7.48)  LR: 5.500e-04  Time cost: 00:22/9:35:45 [5:47:42/153:32:09]  Acc_iter 6181        Data time: 15.68(15.68)  Forward time: 5.66(5.66)  Batch time: 21.34(21.34)
+2024-10-14 00:33:47,290   INFO  Train:    5/20 ( 25%) [  19/1545 (  1%)]  Loss: 7.034 (7.59)  LR: 5.522e-04  Time cost: 01:23/1:45:47 [5:48:43/28:32:21]  Acc_iter 6200        Data time: 0.00(0.93)  Forward time: 2.79(3.19)  Batch time: 2.80(4.12)
+2024-10-14 00:36:21,151   INFO  Train:    5/20 ( 25%) [  69/1545 (  4%)]  Loss: 8.015 (7.70)  LR: 5.579e-04  Time cost: 03:57/1:23:18 [5:51:16/23:11:18]  Acc_iter 6250        Data time: 0.00(0.33)  Forward time: 2.97(3.05)  Batch time: 2.98(3.38)
+2024-10-14 00:37:25,500   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:38:58,535   INFO  Train:    5/20 ( 25%) [ 119/1545 (  8%)]  Loss: 7.574 (7.68)  LR: 5.636e-04  Time cost: 06:34/1:18:07 [5:53:54/22:27:42]  Acc_iter 6300        Data time: 0.21(0.23)  Forward time: 3.15(3.06)  Batch time: 3.37(3.28)
+2024-10-14 00:38:59,921   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:38:59 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:41:35,835   INFO  Train:    5/20 ( 25%) [ 169/1545 ( 11%)]  Loss: 8.117 (7.68)  LR: 5.693e-04  Time cost: 09:11/1:14:25 [5:56:31/22:07:59]  Acc_iter 6350        Data time: 0.00(0.19)  Forward time: 3.47(3.06)  Batch time: 3.47(3.24)
+2024-10-14 00:42:25,248   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:44:11,009   INFO  Train:    5/20 ( 25%) [ 219/1545 ( 14%)]  Loss: 8.025 (7.66)  LR: 5.750e-04  Time cost: 11:46/1:11:00 [5:59:06/21:52:06]  Acc_iter 6400        Data time: 0.18(0.16)  Forward time: 2.70(3.05)  Batch time: 2.88(3.21)
+2024-10-14 00:46:43,790   INFO  Train:    5/20 ( 25%) [ 269/1545 ( 17%)]  Loss: 7.266 (7.66)  LR: 5.807e-04  Time cost: 14:19/1:07:42 [6:01:39/21:37:32]  Acc_iter 6450        Data time: 0.00(0.14)  Forward time: 2.85(3.04)  Batch time: 2.85(3.18)
+2024-10-14 00:46:45,212   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:46:45 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:47:27,051   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:49:22,363   INFO  Train:    5/20 ( 25%) [ 319/1545 ( 21%)]  Loss: 7.983 (7.66)  LR: 5.864e-04  Time cost: 16:58/1:05:01 [6:04:18/21:34:05]  Acc_iter 6500        Data time: 0.15(0.13)  Forward time: 2.95(3.05)  Batch time: 3.10(3.18)
+2024-10-14 00:51:55,714   INFO  Train:    5/20 ( 25%) [ 369/1545 ( 24%)]  Loss: 7.336 (7.64)  LR: 5.921e-04  Time cost: 19:31/1:02:03 [6:06:51/21:25:07]  Acc_iter 6550        Data time: 0.00(0.12)  Forward time: 2.72(3.04)  Batch time: 2.72(3.16)
+2024-10-14 00:52:27,434   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:54:33,664   INFO  Train:    5/20 ( 25%) [ 419/1545 ( 27%)]  Loss: 7.388 (7.63)  LR: 5.978e-04  Time cost: 22:09/59:24 [6:09:29/21:22:07]  Acc_iter 6600        Data time: 0.00(0.11)  Forward time: 3.06(3.05)  Batch time: 3.06(3.16)
+2024-10-14 00:54:35,094   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 00:54:35 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 00:57:08,816   INFO  Train:    5/20 ( 25%) [ 469/1545 ( 30%)]  Loss: 7.200 (7.62)  LR: 6.035e-04  Time cost: 24:44/56:39 [6:12:04/21:16:48]  Acc_iter 6650        Data time: 0.00(0.11)  Forward time: 3.11(3.05)  Batch time: 3.11(3.16)
+2024-10-14 00:57:26,421   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 00:59:40,068   INFO  Train:    5/20 ( 25%) [ 519/1545 ( 34%)]  Loss: 7.921 (7.61)  LR: 6.092e-04  Time cost: 27:15/53:47 [6:14:35/21:08:58]  Acc_iter 6700        Data time: 0.00(0.10)  Forward time: 3.16(3.04)  Batch time: 3.16(3.15)
+2024-10-14 01:02:14,555   INFO  Train:    5/20 ( 25%) [ 569/1545 ( 37%)]  Loss: 7.610 (7.60)  LR: 6.149e-04  Time cost: 29:50/51:05 [6:17:10/21:04:21]  Acc_iter 6750        Data time: 0.00(0.10)  Forward time: 2.62(3.04)  Batch time: 2.62(3.14)
+2024-10-14 01:02:15,985   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:02:15 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:02:25,678   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:04:50,763   INFO  Train:    5/20 ( 25%) [ 619/1545 ( 40%)]  Loss: 7.897 (7.58)  LR: 6.205e-04  Time cost: 32:26/48:27 [6:19:46/21:01:11]  Acc_iter 6800        Data time: 0.00(0.10)  Forward time: 2.81(3.04)  Batch time: 2.81(3.14)
+2024-10-14 01:07:25,469   INFO  Train:    5/20 ( 25%) [ 669/1545 ( 43%)]  Loss: 7.646 (7.57)  LR: 6.262e-04  Time cost: 35:01/45:47 [6:22:21/20:57:12]  Acc_iter 6850        Data time: 0.00(0.09)  Forward time: 3.35(3.04)  Batch time: 3.35(3.14)
+2024-10-14 01:07:25,936   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:10:04,421   INFO  Train:    5/20 ( 25%) [ 719/1545 ( 47%)]  Loss: 7.131 (7.57)  LR: 6.318e-04  Time cost: 37:40/43:13 [6:25:00/20:55:47]  Acc_iter 6900        Data time: 0.19(0.09)  Forward time: 3.04(3.05)  Batch time: 3.22(3.14)
+2024-10-14 01:10:05,854   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:10:05 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:12:25,982   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:12:44,185   INFO  Train:    5/20 ( 25%) [ 769/1545 ( 50%)]  Loss: 7.495 (7.55)  LR: 6.374e-04  Time cost: 40:20/40:38 [6:27:39/20:54:37]  Acc_iter 6950        Data time: 0.01(0.09)  Forward time: 2.87(3.05)  Batch time: 2.89(3.14)
+2024-10-14 01:15:23,304   INFO  Train:    5/20 ( 25%) [ 819/1545 ( 53%)]  Loss: 8.009 (7.55)  LR: 6.430e-04  Time cost: 42:59/38:03 [6:30:19/20:52:57]  Acc_iter 7000        Data time: 0.00(0.09)  Forward time: 2.99(3.06)  Batch time: 3.00(3.14)
+2024-10-14 01:17:25,486   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:18:04,986   INFO  Train:    5/20 ( 25%) [ 869/1545 ( 56%)]  Loss: 7.156 (7.54)  LR: 6.486e-04  Time cost: 45:40/35:29 [6:33:00/20:52:21]  Acc_iter 7050        Data time: 0.00(0.08)  Forward time: 3.32(3.07)  Batch time: 3.33(3.15)
+2024-10-14 01:18:06,384   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:18:06 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:20:43,833   INFO  Train:    5/20 ( 25%) [ 919/1545 ( 59%)]  Loss: 8.068 (7.53)  LR: 6.542e-04  Time cost: 48:19/32:53 [6:35:39/20:50:17]  Acc_iter 7100        Data time: 0.04(0.08)  Forward time: 2.64(3.07)  Batch time: 2.68(3.15)
+2024-10-14 01:22:24,718   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:23:21,974   INFO  Train:    5/20 ( 25%) [ 969/1545 ( 63%)]  Loss: 7.096 (7.52)  LR: 6.597e-04  Time cost: 50:57/30:15 [6:38:17/20:47:53]  Acc_iter 7150        Data time: 0.00(0.08)  Forward time: 2.99(3.07)  Batch time: 2.99(3.15)
+2024-10-14 01:25:57,014   INFO  Train:    5/20 ( 25%) [1019/1545 ( 66%)]  Loss: 7.633 (7.52)  LR: 6.653e-04  Time cost: 53:32/27:36 [6:40:52/20:44:16]  Acc_iter 7200        Data time: 0.00(0.08)  Forward time: 2.56(3.07)  Batch time: 2.57(3.15)
+2024-10-14 01:25:58,420   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:25:58 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:27:24,810   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:28:37,552   INFO  Train:    5/20 ( 25%) [1069/1545 ( 69%)]  Loss: 7.253 (7.50)  LR: 6.708e-04  Time cost: 56:13/25:00 [6:43:33/20:42:45]  Acc_iter 7250        Data time: 0.00(0.08)  Forward time: 2.95(3.07)  Batch time: 2.96(3.15)
+2024-10-14 01:31:13,126   INFO  Train:    5/20 ( 25%) [1119/1545 ( 72%)]  Loss: 7.747 (7.49)  LR: 6.763e-04  Time cost: 58:49/22:22 [6:46:08/20:39:24]  Acc_iter 7300        Data time: 0.12(0.08)  Forward time: 2.97(3.07)  Batch time: 3.10(3.15)
+2024-10-14 01:32:27,565   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:33:49,303   INFO  Train:    5/20 ( 25%) [1169/1545 ( 76%)]  Loss: 7.508 (7.47)  LR: 6.817e-04  Time cost: 1:01:25/19:44 [6:48:45/20:36:19]  Acc_iter 7350        Data time: 0.01(0.08)  Forward time: 2.99(3.07)  Batch time: 3.00(3.15)
+2024-10-14 01:33:51,064   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:33:50 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45590 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:36:26,375   INFO  Train:    5/20 ( 25%) [1219/1545 ( 79%)]  Loss: 7.628 (7.47)  LR: 6.872e-04  Time cost: 1:04:02/17:06 [6:51:22/20:33:34]  Acc_iter 7400        Data time: 0.00(0.08)  Forward time: 3.16(3.07)  Batch time: 3.16(3.15)
+2024-10-14 01:37:25,372   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:39:01,573   INFO  Train:    5/20 ( 25%) [1269/1545 ( 82%)]  Loss: 6.868 (7.46)  LR: 6.926e-04  Time cost: 1:06:37/14:28 [6:53:57/20:30:14]  Acc_iter 7450        Data time: 0.00(0.08)  Forward time: 3.05(3.07)  Batch time: 3.06(3.15)
+2024-10-14 01:41:39,909   INFO  Train:    5/20 ( 25%) [1319/1545 ( 85%)]  Loss: 7.031 (7.44)  LR: 6.981e-04  Time cost: 1:09:15/11:51 [6:56:35/20:27:54]  Acc_iter 7500        Data time: 0.19(0.07)  Forward time: 3.12(3.07)  Batch time: 3.31(3.15)
+2024-10-14 01:41:41,356   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:41:41 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 44968 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:42:24,868   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:44:21,410   INFO  Train:    5/20 ( 25%) [1369/1545 ( 89%)]  Loss: 7.200 (7.44)  LR: 7.034e-04  Time cost: 1:11:57/09:14 [6:59:17/20:26:26]  Acc_iter 7550        Data time: 0.01(0.08)  Forward time: 3.16(3.08)  Batch time: 3.17(3.15)
+2024-10-14 01:46:56,887   INFO  Train:    5/20 ( 25%) [1419/1545 ( 92%)]  Loss: 6.736 (7.42)  LR: 7.088e-04  Time cost: 1:14:32/06:36 [7:01:52/20:23:14]  Acc_iter 7600        Data time: 0.00(0.07)  Forward time: 3.05(3.08)  Batch time: 3.06(3.15)
+2024-10-14 01:47:26,959   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:49:36,235   INFO  Train:    5/20 ( 25%) [1469/1545 ( 95%)]  Loss: 6.658 (7.41)  LR: 7.141e-04  Time cost: 1:17:12/03:59 [7:04:31/20:21:06]  Acc_iter 7650        Data time: 0.01(0.07)  Forward time: 3.06(3.08)  Batch time: 3.07(3.15)
+2024-10-14 01:49:37,666   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 01:49:37 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 51°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 56°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 01:52:12,495   INFO  Train:    5/20 ( 25%) [1519/1545 ( 98%)]  Loss: 7.362 (7.40)  LR: 7.195e-04  Time cost: 1:19:48/01:21 [7:07:08/20:18:09]  Acc_iter 7700        Data time: 0.00(0.07)  Forward time: 2.65(3.08)  Batch time: 2.65(3.15)
+2024-10-14 01:52:26,412   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 01:53:22,385   INFO  Train:    5/20 ( 25%) [1544/1545 (100%)]  Loss: 7.239 (7.40)  LR: 7.221e-04  Time cost: 1:20:58/00:03 [7:08:18/20:14:37]  Acc_iter 7725        Data time: 0.00(0.07)  Forward time: 1.88(3.07)  Batch time: 1.88(3.14)
+2024-10-14 01:57:02,711   INFO  Train:    6/20 ( 30%) [   0/1545 (  0%)]  Loss: 7.251 (7.25)  LR: 7.222e-04  Time cost: 00:22/9:40:25 [7:11:58/145:06:17]  Acc_iter 7726        Data time: 11.70(11.70)  Forward time: 9.24(9.24)  Batch time: 20.94(20.94)
+2024-10-14 01:58:20,120   INFO  Train:    6/20 ( 30%) [  24/1545 (  2%)]  Loss: 6.857 (7.13)  LR: 7.247e-04  Time cost: 01:39/1:41:20 [7:13:15/25:42:36]  Acc_iter 7750        Data time: 0.00(0.62)  Forward time: 3.07(3.35)  Batch time: 3.07(3.97)
+2024-10-14 02:00:55,844   INFO  Train:    6/20 ( 30%) [  74/1545 (  5%)]  Loss: 6.738 (7.02)  LR: 7.300e-04  Time cost: 04:15/1:23:34 [7:15:51/21:52:30]  Acc_iter 7800        Data time: 0.00(0.26)  Forward time: 3.28(3.13)  Batch time: 3.28(3.40)
+2024-10-14 02:00:57,246   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:00:57 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:01:41,811   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:03:30,968   INFO  Train:    6/20 ( 30%) [ 124/1545 (  8%)]  Loss: 7.190 (7.04)  LR: 7.352e-04  Time cost: 06:50/1:17:49 [7:18:26/21:02:34]  Acc_iter 7850        Data time: 0.00(0.20)  Forward time: 2.95(3.08)  Batch time: 2.95(3.28)
+2024-10-14 02:06:07,391   INFO  Train:    6/20 ( 30%) [ 174/1545 ( 11%)]  Loss: 6.660 (7.03)  LR: 7.404e-04  Time cost: 09:27/1:14:03 [7:21:03/20:42:32]  Acc_iter 7900        Data time: 0.17(0.15)  Forward time: 3.44(3.08)  Batch time: 3.61(3.24)
+2024-10-14 02:06:40,766   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:08:39,504   INFO  Train:    6/20 ( 30%) [ 224/1545 ( 14%)]  Loss: 6.908 (7.03)  LR: 7.456e-04  Time cost: 11:59/1:10:23 [7:23:35/20:22:55]  Acc_iter 7950        Data time: 0.00(0.14)  Forward time: 2.88(3.06)  Batch time: 2.88(3.19)
+2024-10-14 02:08:40,919   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:08:40 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:11:13,776   INFO  Train:    6/20 ( 30%) [ 274/1545 ( 18%)]  Loss: 6.615 (7.03)  LR: 7.507e-04  Time cost: 14:33/1:07:17 [7:26:09/20:12:30]  Acc_iter 8000        Data time: 0.05(0.13)  Forward time: 2.66(3.05)  Batch time: 2.71(3.17)
+2024-10-14 02:11:41,974   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:13:52,099   INFO  Train:    6/20 ( 30%) [ 324/1545 ( 21%)]  Loss: 6.843 (7.04)  LR: 7.558e-04  Time cost: 17:11/1:04:36 [7:28:47/20:09:15]  Acc_iter 8050        Data time: 0.00(0.12)  Forward time: 3.30(3.05)  Batch time: 3.31(3.17)
+2024-10-14 02:16:24,519   INFO  Train:    6/20 ( 30%) [ 374/1545 ( 24%)]  Loss: 6.897 (7.02)  LR: 7.609e-04  Time cost: 19:44/1:01:38 [7:31:20/20:00:11]  Acc_iter 8100        Data time: 0.38(0.12)  Forward time: 3.27(3.04)  Batch time: 3.65(3.16)
+2024-10-14 02:16:25,988   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:16:25 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:16:42,522   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:19:04,390   INFO  Train:    6/20 ( 30%) [ 424/1545 ( 27%)]  Loss: 7.187 (7.02)  LR: 7.659e-04  Time cost: 22:24/59:05 [7:34:00/19:59:18]  Acc_iter 8150        Data time: 0.07(0.11)  Forward time: 3.54(3.05)  Batch time: 3.61(3.16)
+2024-10-14 02:21:40,592   INFO  Train:    6/20 ( 30%) [ 474/1545 ( 31%)]  Loss: 7.343 (7.02)  LR: 7.709e-04  Time cost: 25:00/56:23 [7:36:36/19:55:07]  Acc_iter 8200        Data time: 0.13(0.10)  Forward time: 2.54(3.05)  Batch time: 2.67(3.16)
+2024-10-14 02:21:41,049   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:24:22,549   INFO  Train:    6/20 ( 30%) [ 524/1545 ( 34%)]  Loss: 7.206 (7.02)  LR: 7.759e-04  Time cost: 27:42/53:52 [7:39:18/19:55:22]  Acc_iter 8250        Data time: 0.00(0.10)  Forward time: 3.54(3.07)  Batch time: 3.55(3.17)
+2024-10-14 02:24:23,973   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:24:23 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:26:41,586   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:27:00,394   INFO  Train:    6/20 ( 30%) [ 574/1545 ( 37%)]  Loss: 6.879 (7.01)  LR: 7.808e-04  Time cost: 30:20/51:13 [7:41:56/19:52:25]  Acc_iter 8300        Data time: 0.04(0.09)  Forward time: 3.43(3.07)  Batch time: 3.47(3.16)
+2024-10-14 02:29:37,663   INFO  Train:    6/20 ( 30%) [ 624/1545 ( 40%)]  Loss: 7.095 (7.01)  LR: 7.857e-04  Time cost: 32:57/48:34 [7:44:33/19:49:11]  Acc_iter 8350        Data time: 0.22(0.09)  Forward time: 2.58(3.07)  Batch time: 2.80(3.16)
+2024-10-14 02:31:41,848   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:32:12,358   INFO  Train:    6/20 ( 30%) [ 674/1545 ( 44%)]  Loss: 6.767 (7.00)  LR: 7.906e-04  Time cost: 35:32/45:51 [7:47:08/19:44:36]  Acc_iter 8400        Data time: 0.00(0.09)  Forward time: 3.42(3.07)  Batch time: 3.43(3.16)
+2024-10-14 02:32:13,780   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:32:13 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:34:51,829   INFO  Train:    6/20 ( 30%) [ 724/1545 ( 47%)]  Loss: 7.187 (6.99)  LR: 7.954e-04  Time cost: 38:11/43:15 [7:49:47/19:42:45]  Acc_iter 8450        Data time: 0.01(0.09)  Forward time: 3.04(3.07)  Batch time: 3.04(3.16)
+2024-10-14 02:36:40,594   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:37:28,783   INFO  Train:    6/20 ( 30%) [ 774/1545 ( 50%)]  Loss: 6.250 (6.99)  LR: 8.001e-04  Time cost: 40:48/40:35 [7:52:24/19:39:35]  Acc_iter 8500        Data time: 0.00(0.09)  Forward time: 3.12(3.07)  Batch time: 3.12(3.16)
+2024-10-14 02:40:06,642   INFO  Train:    6/20 ( 30%) [ 824/1545 ( 53%)]  Loss: 7.112 (6.98)  LR: 8.049e-04  Time cost: 43:26/37:57 [7:55:02/19:36:54]  Acc_iter 8550        Data time: 0.01(0.08)  Forward time: 3.00(3.08)  Batch time: 3.01(3.16)
+2024-10-14 02:40:08,094   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:40:08 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:41:41,739   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:42:43,408   INFO  Train:    6/20 ( 30%) [ 874/1545 ( 57%)]  Loss: 6.611 (6.97)  LR: 8.096e-04  Time cost: 46:03/35:19 [7:57:39/19:33:46]  Acc_iter 8600        Data time: 0.07(0.08)  Forward time: 2.95(3.08)  Batch time: 3.01(3.16)
+2024-10-14 02:45:21,068   INFO  Train:    6/20 ( 30%) [ 924/1545 ( 60%)]  Loss: 6.645 (6.96)  LR: 8.142e-04  Time cost: 48:40/32:40 [8:00:16/19:31:02]  Acc_iter 8650        Data time: 0.00(0.08)  Forward time: 2.72(3.08)  Batch time: 2.73(3.16)
+2024-10-14 02:46:41,995   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:48:02,497   INFO  Train:    6/20 ( 30%) [ 974/1545 ( 63%)]  Loss: 7.103 (6.95)  LR: 8.188e-04  Time cost: 51:22/30:05 [8:02:58/19:29:45]  Acc_iter 8700        Data time: 0.25(0.08)  Forward time: 3.15(3.08)  Batch time: 3.40(3.16)
+2024-10-14 02:48:03,912   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:48:03 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:50:44,894   INFO  Train:    6/20 ( 30%) [1024/1545 ( 66%)]  Loss: 6.527 (6.94)  LR: 8.234e-04  Time cost: 54:04/27:29 [8:05:40/19:28:40]  Acc_iter 8750        Data time: 0.01(0.08)  Forward time: 3.38(3.09)  Batch time: 3.38(3.16)
+2024-10-14 02:51:43,602   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:53:23,556   INFO  Train:    6/20 ( 30%) [1074/1545 ( 70%)]  Loss: 6.752 (6.93)  LR: 8.279e-04  Time cost: 56:43/24:51 [8:08:19/19:26:10]  Acc_iter 8800        Data time: 0.00(0.07)  Forward time: 3.02(3.09)  Batch time: 3.03(3.17)
+2024-10-14 02:55:59,126   INFO  Train:    6/20 ( 30%) [1124/1545 ( 73%)]  Loss: 7.026 (6.93)  LR: 8.324e-04  Time cost: 59:18/22:11 [8:10:54/19:22:38]  Acc_iter 8850        Data time: 0.00(0.07)  Forward time: 3.30(3.09)  Batch time: 3.30(3.16)
+2024-10-14 02:56:00,565   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 02:56:00 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 02:56:41,447   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 02:58:38,605   INFO  Train:    6/20 ( 30%) [1174/1545 ( 76%)]  Loss: 6.458 (6.92)  LR: 8.368e-04  Time cost: 1:01:58/19:34 [8:13:34/19:20:24]  Acc_iter 8900        Data time: 0.01(0.07)  Forward time: 3.37(3.09)  Batch time: 3.38(3.16)
+2024-10-14 03:01:15,425   INFO  Train:    6/20 ( 30%) [1224/1545 ( 79%)]  Loss: 6.803 (6.91)  LR: 8.412e-04  Time cost: 1:04:35/16:55 [8:16:11/19:17:21]  Acc_iter 8950        Data time: 0.18(0.07)  Forward time: 2.91(3.09)  Batch time: 3.09(3.16)
+2024-10-14 03:01:41,037   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:03:53,540   INFO  Train:    6/20 ( 30%) [1274/1545 ( 82%)]  Loss: 6.704 (6.90)  LR: 8.455e-04  Time cost: 1:07:13/14:17 [8:18:49/19:14:42]  Acc_iter 9000        Data time: 0.00(0.07)  Forward time: 3.13(3.09)  Batch time: 3.14(3.16)
+2024-10-14 03:03:55,246   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:03:54 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:06:30,426   INFO  Train:    6/20 ( 30%) [1324/1545 ( 86%)]  Loss: 6.911 (6.89)  LR: 8.498e-04  Time cost: 1:09:50/11:38 [8:21:26/19:11:42]  Acc_iter 9050        Data time: 0.00(0.07)  Forward time: 2.99(3.09)  Batch time: 2.99(3.16)
+2024-10-14 03:06:44,025   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:09:06,981   INFO  Train:    6/20 ( 30%) [1374/1545 ( 89%)]  Loss: 6.701 (6.89)  LR: 8.541e-04  Time cost: 1:12:26/09:00 [8:24:02/19:08:39]  Acc_iter 9100        Data time: 0.00(0.07)  Forward time: 3.29(3.09)  Batch time: 3.29(3.16)
+2024-10-14 03:11:42,052   INFO  Train:    6/20 ( 30%) [1424/1545 ( 92%)]  Loss: 6.769 (6.88)  LR: 8.583e-04  Time cost: 1:15:01/06:22 [8:26:37/19:05:16]  Acc_iter 9150        Data time: 0.00(0.07)  Forward time: 3.16(3.09)  Batch time: 3.17(3.16)
+2024-10-14 03:11:43,456   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:11:43 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:11:43,884   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:14:21,752   INFO  Train:    6/20 ( 30%) [1474/1545 ( 95%)]  Loss: 6.690 (6.88)  LR: 8.624e-04  Time cost: 1:17:41/03:44 [8:29:17/19:03:03]  Acc_iter 9200        Data time: 0.38(0.07)  Forward time: 2.95(3.09)  Batch time: 3.33(3.16)
+2024-10-14 03:16:42,097   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:16:58,103   INFO  Train:    6/20 ( 30%) [1524/1545 ( 99%)]  Loss: 6.625 (6.87)  LR: 8.665e-04  Time cost: 1:20:17/01:06 [8:31:53/19:00:02]  Acc_iter 9250        Data time: 0.00(0.07)  Forward time: 3.24(3.09)  Batch time: 3.24(3.16)
+2024-10-14 03:17:51,073   INFO  Train:    6/20 ( 30%) [1544/1545 (100%)]  Loss: 6.202 (6.87)  LR: 8.681e-04  Time cost: 1:21:10/00:03 [8:32:46/18:56:35]  Acc_iter 9270        Data time: 0.00(0.07)  Forward time: 1.87(3.08)  Batch time: 1.87(3.15)
+2024-10-14 03:21:28,021   INFO  Train:    7/20 ( 35%) [   0/1545 (  0%)]  Loss: 6.769 (6.77)  LR: 8.682e-04  Time cost: 00:19/8:14:39 [8:36:23/115:25:07]  Acc_iter 9271        Data time: 13.19(13.19)  Forward time: 5.07(5.07)  Batch time: 18.26(18.26)
+2024-10-14 03:23:05,615   INFO  Train:    7/20 ( 35%) [  29/1545 (  2%)]  Loss: 7.070 (6.70)  LR: 8.705e-04  Time cost: 01:56/1:38:22 [8:38:01/23:21:42]  Acc_iter 9300        Data time: 0.01(0.50)  Forward time: 2.93(3.37)  Batch time: 2.94(3.87)
+2024-10-14 03:23:07,012   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:23:06 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 50°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 56°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:25:48,123   INFO  Train:    7/20 ( 35%) [  79/1545 (  5%)]  Loss: 6.534 (6.62)  LR: 8.745e-04  Time cost: 04:39/1:25:18 [8:40:43/20:54:03]  Acc_iter 9350        Data time: 0.00(0.23)  Forward time: 3.49(3.26)  Batch time: 3.49(3.48)
+2024-10-14 03:26:10,808   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:28:25,194   INFO  Train:    7/20 ( 35%) [ 129/1545 (  8%)]  Loss: 6.902 (6.59)  LR: 8.785e-04  Time cost: 07:16/1:19:13 [8:43:20/20:02:54]  Acc_iter 9400        Data time: 0.48(0.17)  Forward time: 3.00(3.18)  Batch time: 3.49(3.35)
+2024-10-14 03:31:00,309   INFO  Train:    7/20 ( 35%) [ 179/1545 ( 12%)]  Loss: 6.580 (6.62)  LR: 8.823e-04  Time cost: 09:51/1:14:48 [8:45:56/19:34:50]  Acc_iter 9450        Data time: 0.00(0.15)  Forward time: 3.08(3.13)  Batch time: 3.08(3.28)
+2024-10-14 03:31:01,731   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:31:01 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:31:09,384   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:33:38,041   INFO  Train:    7/20 ( 35%) [ 229/1545 ( 15%)]  Loss: 6.195 (6.62)  LR: 8.862e-04  Time cost: 12:29/1:11:26 [8:48:33/19:21:54]  Acc_iter 9500        Data time: 0.05(0.13)  Forward time: 2.95(3.12)  Batch time: 2.99(3.25)
+2024-10-14 03:36:11,020   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:36:14,377   INFO  Train:    7/20 ( 35%) [ 279/1545 ( 18%)]  Loss: 6.966 (6.62)  LR: 8.899e-04  Time cost: 15:05/1:08:14 [8:51:10/19:10:52]  Acc_iter 9550        Data time: 0.11(0.12)  Forward time: 3.67(3.11)  Batch time: 3.78(3.23)
+2024-10-14 03:38:48,683   INFO  Train:    7/20 ( 35%) [ 329/1545 ( 21%)]  Loss: 6.235 (6.62)  LR: 8.937e-04  Time cost: 17:39/1:05:05 [8:53:44/19:00:13]  Acc_iter 9600        Data time: 0.00(0.11)  Forward time: 3.28(3.10)  Batch time: 3.28(3.21)
+2024-10-14 03:38:50,122   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:38:50 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:41:12,069   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:41:28,013   INFO  Train:    7/20 ( 35%) [ 379/1545 ( 25%)]  Loss: 6.762 (6.63)  LR: 8.973e-04  Time cost: 20:19/1:02:21 [8:56:23/18:56:22]  Acc_iter 9650        Data time: 0.52(0.11)  Forward time: 3.21(3.10)  Batch time: 3.73(3.21)
+2024-10-14 03:43:59,661   INFO  Train:    7/20 ( 35%) [ 429/1545 ( 28%)]  Loss: 6.988 (6.63)  LR: 9.009e-04  Time cost: 22:50/59:17 [8:58:55/18:46:29]  Acc_iter 9700        Data time: 0.01(0.10)  Forward time: 2.80(3.08)  Batch time: 2.81(3.19)
+2024-10-14 03:46:10,738   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:46:38,980   INFO  Train:    7/20 ( 35%) [ 479/1545 ( 31%)]  Loss: 6.862 (6.63)  LR: 9.045e-04  Time cost: 25:30/56:38 [9:01:34/18:43:46]  Acc_iter 9750        Data time: 0.39(0.10)  Forward time: 2.91(3.09)  Batch time: 3.30(3.19)
+2024-10-14 03:46:40,427   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:46:40 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:49:10,902   INFO  Train:    7/20 ( 35%) [ 529/1545 ( 34%)]  Loss: 6.640 (6.61)  LR: 9.080e-04  Time cost: 28:02/53:44 [9:04:06/18:36:09]  Acc_iter 9800        Data time: 0.00(0.10)  Forward time: 2.92(3.08)  Batch time: 2.93(3.17)
+2024-10-14 03:51:09,717   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:51:49,714   INFO  Train:    7/20 ( 35%) [ 579/1545 ( 37%)]  Loss: 7.060 (6.60)  LR: 9.114e-04  Time cost: 30:40/51:06 [9:06:45/18:33:35]  Acc_iter 9850        Data time: 0.30(0.10)  Forward time: 2.80(3.08)  Batch time: 3.10(3.17)
+2024-10-14 03:54:26,481   INFO  Train:    7/20 ( 35%) [ 629/1545 ( 41%)]  Loss: 6.824 (6.60)  LR: 9.148e-04  Time cost: 33:17/48:24 [9:09:22/18:29:52]  Acc_iter 9900        Data time: 0.00(0.09)  Forward time: 2.72(3.08)  Batch time: 2.72(3.17)
+2024-10-14 03:54:27,895   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 03:54:27 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 03:56:10,698   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 03:57:03,624   INFO  Train:    7/20 ( 35%) [ 679/1545 ( 44%)]  Loss: 6.683 (6.60)  LR: 9.181e-04  Time cost: 35:54/45:44 [9:11:59/18:26:30]  Acc_iter 9950        Data time: 0.01(0.09)  Forward time: 2.91(3.08)  Batch time: 2.91(3.17)
+2024-10-14 03:59:38,482   INFO  Train:    7/20 ( 35%) [ 729/1545 ( 47%)]  Loss: 6.256 (6.59)  LR: 9.214e-04  Time cost: 38:29/43:01 [9:14:34/18:22:09]  Acc_iter 10000       Data time: 0.00(0.09)  Forward time: 2.60(3.07)  Batch time: 2.60(3.16)
+2024-10-14 04:01:09,506   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:02:15,240   INFO  Train:    7/20 ( 35%) [ 779/1545 ( 50%)]  Loss: 6.313 (6.59)  LR: 9.246e-04  Time cost: 41:06/40:22 [9:17:10/18:18:52]  Acc_iter 10050       Data time: 0.00(0.09)  Forward time: 3.00(3.07)  Batch time: 3.00(3.16)
+2024-10-14 04:02:16,658   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:02:16 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:04:51,104   INFO  Train:    7/20 ( 35%) [ 829/1545 ( 54%)]  Loss: 6.567 (6.59)  LR: 9.277e-04  Time cost: 43:42/37:42 [9:19:46/18:15:18]  Acc_iter 10100       Data time: 0.00(0.08)  Forward time: 2.91(3.07)  Batch time: 2.91(3.16)
+2024-10-14 04:06:10,540   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:07:27,974   INFO  Train:    7/20 ( 35%) [ 879/1545 ( 57%)]  Loss: 6.332 (6.58)  LR: 9.308e-04  Time cost: 46:19/35:03 [9:22:23/18:12:14]  Acc_iter 10150       Data time: 0.00(0.08)  Forward time: 3.31(3.07)  Batch time: 3.31(3.16)
+2024-10-14 04:10:00,951   INFO  Train:    7/20 ( 35%) [ 929/1545 ( 60%)]  Loss: 6.768 (6.58)  LR: 9.338e-04  Time cost: 48:52/32:22 [9:24:56/18:07:46]  Acc_iter 10200       Data time: 0.09(0.08)  Forward time: 2.90(3.07)  Batch time: 2.99(3.15)
+2024-10-14 04:10:02,394   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:10:02 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 54°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:11:12,354   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:12:40,287   INFO  Train:    7/20 ( 35%) [ 979/1545 ( 63%)]  Loss: 6.523 (6.57)  LR: 9.368e-04  Time cost: 51:31/29:45 [9:27:36/18:05:44]  Acc_iter 10250       Data time: 0.00(0.08)  Forward time: 2.80(3.07)  Batch time: 2.80(3.15)
+2024-10-14 04:15:11,430   INFO  Train:    7/20 ( 35%) [1029/1545 ( 67%)]  Loss: 7.197 (6.56)  LR: 9.397e-04  Time cost: 54:02/27:04 [9:30:07/18:00:55]  Acc_iter 10300       Data time: 0.00(0.08)  Forward time: 3.00(3.06)  Batch time: 3.01(3.15)
+2024-10-14 04:16:09,972   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:17:46,782   INFO  Train:    7/20 ( 35%) [1079/1545 ( 70%)]  Loss: 6.296 (6.55)  LR: 9.425e-04  Time cost: 56:37/24:26 [9:32:42/17:57:38]  Acc_iter 10350       Data time: 0.00(0.08)  Forward time: 2.66(3.06)  Batch time: 2.66(3.15)
+2024-10-14 04:17:48,226   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:17:48 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:20:29,371   INFO  Train:    7/20 ( 35%) [1129/1545 ( 73%)]  Loss: 6.268 (6.55)  LR: 9.452e-04  Time cost: 59:20/21:50 [9:35:25/17:56:37]  Acc_iter 10400       Data time: 0.01(0.08)  Forward time: 3.07(3.07)  Batch time: 3.08(3.15)
+2024-10-14 04:21:09,474   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:23:07,956   INFO  Train:    7/20 ( 35%) [1179/1545 ( 76%)]  Loss: 6.480 (6.54)  LR: 9.480e-04  Time cost: 1:01:59/19:13 [9:38:03/17:54:17]  Acc_iter 10450       Data time: 0.00(0.08)  Forward time: 3.29(3.07)  Batch time: 3.29(3.15)
+2024-10-14 04:25:43,656   INFO  Train:    7/20 ( 35%) [1229/1545 ( 80%)]  Loss: 6.454 (6.53)  LR: 9.506e-04  Time cost: 1:04:34/16:35 [9:40:39/17:51:08]  Acc_iter 10500       Data time: 0.00(0.08)  Forward time: 3.16(3.07)  Batch time: 3.16(3.15)
+2024-10-14 04:25:45,131   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:25:45 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:26:11,931   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:28:23,299   INFO  Train:    7/20 ( 35%) [1279/1545 ( 83%)]  Loss: 6.415 (6.53)  LR: 9.532e-04  Time cost: 1:07:14/13:58 [9:43:19/17:49:05]  Acc_iter 10550       Data time: 0.20(0.08)  Forward time: 3.61(3.07)  Batch time: 3.81(3.15)
+2024-10-14 04:31:00,501   INFO  Train:    7/20 ( 35%) [1329/1545 ( 86%)]  Loss: 6.880 (6.52)  LR: 9.557e-04  Time cost: 1:09:51/11:20 [9:45:56/17:46:21]  Acc_iter 10600       Data time: 0.19(0.08)  Forward time: 3.31(3.07)  Batch time: 3.50(3.15)
+2024-10-14 04:31:10,939   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:33:38,743   INFO  Train:    7/20 ( 35%) [1379/1545 ( 89%)]  Loss: 6.362 (6.52)  LR: 9.581e-04  Time cost: 1:12:29/08:43 [9:48:34/17:43:53]  Acc_iter 10650       Data time: 0.05(0.08)  Forward time: 3.22(3.08)  Batch time: 3.27(3.15)
+2024-10-14 04:33:40,209   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:33:40 2024  555.42.06
+[0] NVIDIA A40 | 50°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 56°C, 100 % | 45336 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:36:10,236   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:36:13,463   INFO  Train:    7/20 ( 35%) [1429/1545 ( 92%)]  Loss: 6.240 (6.51)  LR: 9.605e-04  Time cost: 1:15:04/06:05 [9:51:09/17:40:35]  Acc_iter 10700       Data time: 0.44(0.08)  Forward time: 3.54(3.07)  Batch time: 3.98(3.15)
+2024-10-14 04:38:50,014   INFO  Train:    7/20 ( 35%) [1479/1545 ( 96%)]  Loss: 6.130 (6.51)  LR: 9.628e-04  Time cost: 1:17:41/03:27 [9:53:45/17:37:44]  Acc_iter 10750       Data time: 0.05(0.08)  Forward time: 2.68(3.07)  Batch time: 2.73(3.15)
+2024-10-14 04:41:11,768   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:41:24,211   INFO  Train:    7/20 ( 35%) [1529/1545 ( 99%)]  Loss: 6.535 (6.50)  LR: 9.650e-04  Time cost: 1:20:15/00:50 [9:56:19/17:34:24]  Acc_iter 10800       Data time: 0.01(0.08)  Forward time: 2.70(3.07)  Batch time: 2.71(3.15)
+2024-10-14 04:41:25,632   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:41:25 2024  555.42.06
+[0] NVIDIA A40 | 51°C,   0 % | 45574 / 46068 MB |
+[1] NVIDIA A40 | 52°C, 100 % | 45436 / 46068 MB |
+[2] NVIDIA A40 | 57°C, 100 % | 45704 / 46068 MB |
+[3] NVIDIA A40 | 57°C, 100 % | 45440 / 46068 MB |
+
+2024-10-14 04:42:02,691   INFO  Train:    7/20 ( 35%) [1544/1545 (100%)]  Loss: 7.185 (6.50)  LR: 9.657e-04  Time cost: 1:20:53/00:03 [9:56:58/17:31:43]  Acc_iter 10815       Data time: 0.00(0.08)  Forward time: 1.87(3.07)  Batch time: 1.87(3.14)
+2024-10-14 04:45:42,859   INFO  Train:    8/20 ( 40%) [   0/1545 (  0%)]  Loss: 6.430 (6.43)  LR: 9.657e-04  Time cost: 00:21/9:01:57 [10:00:38/117:25:27]  Acc_iter 10816       Data time: 13.36(13.36)  Forward time: 6.33(6.33)  Batch time: 19.69(19.69)
+2024-10-14 04:47:33,163   INFO  Train:    8/20 ( 40%) [  34/1545 (  2%)]  Loss: 6.441 (6.38)  LR: 9.672e-04  Time cost: 02:11/1:34:30 [10:02:28/20:54:09]  Acc_iter 10850       Data time: 0.00(0.46)  Forward time: 3.15(3.27)  Batch time: 3.15(3.72)
+2024-10-14 04:50:08,156   INFO  Train:    8/20 ( 40%) [  84/1545 (  5%)]  Loss: 6.601 (6.33)  LR: 9.693e-04  Time cost: 04:46/1:22:01 [10:05:03/18:42:58]  Acc_iter 10900       Data time: 0.00(0.21)  Forward time: 2.76(3.14)  Batch time: 2.76(3.35)
+2024-10-14 04:50:24,509   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:52:43,766   INFO  Train:    8/20 ( 40%) [ 134/1545 (  9%)]  Loss: 6.345 (6.32)  LR: 9.714e-04  Time cost: 07:21/1:16:59 [10:07:39/18:08:34]  Acc_iter 10950       Data time: 0.24(0.16)  Forward time: 2.67(3.11)  Batch time: 2.90(3.26)
+2024-10-14 04:52:45,208   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 04:52:45 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45576 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45438 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45704 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45442 / 46068 MB |
+
+2024-10-14 04:55:20,646   INFO  Train:    8/20 ( 40%) [ 184/1545 ( 12%)]  Loss: 6.224 (6.30)  LR: 9.733e-04  Time cost: 09:58/1:13:25 [10:10:16/17:53:38]  Acc_iter 11000       Data time: 0.00(0.13)  Forward time: 2.96(3.10)  Batch time: 2.96(3.23)
+2024-10-14 04:55:24,208   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 04:57:56,024   INFO  Train:    8/20 ( 40%) [ 234/1545 ( 15%)]  Loss: 5.874 (6.27)  LR: 9.752e-04  Time cost: 12:34/1:10:07 [10:12:51/17:41:50]  Acc_iter 11050       Data time: 0.00(0.11)  Forward time: 3.52(3.10)  Batch time: 3.53(3.21)
+2024-10-14 05:00:22,958   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 05:00:32,856   INFO  Train:    8/20 ( 40%) [ 284/1545 ( 18%)]  Loss: 6.383 (6.27)  LR: 9.771e-04  Time cost: 15:11/1:07:10 [10:15:28/17:34:56]  Acc_iter 11100       Data time: 0.00(0.10)  Forward time: 3.32(3.09)  Batch time: 3.32(3.19)
+2024-10-14 05:00:34,300   INFO  test0628-pytorch-jupyter-kubesharev3-546768868c-rw447  Mon Oct 14 05:00:34 2024  555.42.06
+[0] NVIDIA A40 | 52°C,   0 % | 45576 / 46068 MB |
+[1] NVIDIA A40 | 53°C, 100 % | 45438 / 46068 MB |
+[2] NVIDIA A40 | 58°C, 100 % | 45704 / 46068 MB |
+[3] NVIDIA A40 | 58°C, 100 % | 45442 / 46068 MB |
+
+2024-10-14 05:03:11,191   INFO  Train:    8/20 ( 40%) [ 334/1545 ( 22%)]  Loss: 6.002 (6.28)  LR: 9.789e-04  Time cost: 17:49/1:04:25 [10:18:06/17:30:48]  Acc_iter 11150       Data time: 0.00(0.09)  Forward time: 3.07(3.10)  Batch time: 3.07(3.19)
+2024-10-14 05:05:23,359   INFO  Save latest model to /home/OpenPCDet/output/nuscenes_models/cbgs_pillar0075_res2d_centerpoint/pillarnet_batch20/ckpt/latest_model
+2024-10-14 05:05:48,524   INFO  Train:    8/20 ( 40%) [ 384/1545 ( 25%)]  Loss: 6.448 (6.27)  LR: 9.805e-04  Time cost: 20:26/1:01:39 [10:20:44/17:26:12]  Acc_iter 11200       Data time: 0.00(0.09)  Forward time: 3.12(3.10)  Batch time: 3.12(3.18)

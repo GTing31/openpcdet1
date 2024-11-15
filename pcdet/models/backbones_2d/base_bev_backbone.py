@@ -342,30 +342,71 @@ class Inceptionneck(nn.Module):
         self.model_cfg = model_cfg
         norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
 
-        # self.deconv1 = deconv_block(64, 128, 1, 1, 0, norm_fn=norm_fn)
-        # self.deconv2 = deconv_block(128, 128, 2, 2, 0, norm_fn=norm_fn)
-        # self.deconv3 = deconv_block(256, 128, 4, 4, 0, norm_fn=norm_fn)
-        self.num_bev_features = 256
+        self.deconv1 = deconv_block(64, 128, 1, 1, 0, norm_fn=norm_fn)
+        self.deconv2 = deconv_block(128, 128, 2, 2, 0, norm_fn=norm_fn)
+        self.deconv3 = deconv_block(256, 128, 4, 4, 0, norm_fn=norm_fn)
+        self.num_bev_features = 384
     def forward(self, data_dict):
         spatial_features = data_dict['multi_scale_2d_features']
-        # conv3 = spatial_features['x_conv1']
-        # conv4 = spatial_features['x_conv2']
-        # conv5 = spatial_features['x_conv3']
-
+        conv2 = spatial_features['x_conv2']
+        conv3 = spatial_features['x_conv3']
         conv4 = spatial_features['x_conv4']
-        # up1 = self.deconv1(conv3)
-        # up2 = self.deconv2(conv4)
-        # up3 = self.deconv3(conv5)
-        # print('conv3:', up1.shape)
-        # print('conv4:', conv4.shape)
-        # print('conv5:', up3.shape)
 
-        # x = torch.cat([up1, up2, up3], dim=1)
+        # conv4 = spatial_features['x_conv4']
+
+
+        up1 = self.deconv1(conv2)
+        up2 = self.deconv2(conv3)
+        up3 = self.deconv3(conv4)
+        # print('conv2:', up1.shape)
+        # print('conv3:', up2.shape)
+        # print('conv4:', up3.shape)
+
+        x = torch.cat([up1, up2, up3], dim=1)
         # print('concat:', x.shape)
 
-        data_dict['spatial_features_2d'] = conv4
+        data_dict['spatial_features_2d'] = x
 
         return data_dict
+
+# class Fpnneck(nn.Module):
+#     def __init__(self, model_cfg, input_channels):
+#         super().__init__()
+#         self.model_cfg = model_cfg
+#         norm_fn = partial(nn.BatchNorm2d, eps=1e-3, momentum=0.01)
+#
+#         self.lat_conv2 = nn.Conv2d(128, 128, kernel_size=1, stride=1, padding=0)
+#         self.lat_conv3 = nn.Conv2d(128, 128, kernel_size=1, stride=1, padding=0)
+#         self.lat_conv4 = nn.Conv2d(256, 128, kernel_size=1, stride=1, padding=0)
+#
+#         self.deconv1 = deconv_block(64, 128, 1, 1, 0, norm_fn=norm_fn)
+#         self.deconv2 = deconv_block(128, 128, 2, 2, 0, norm_fn=norm_fn)
+#         self.deconv3 = deconv_block(256, 128, 2, 2, 0, norm_fn=norm_fn)
+#         self.num_bev_features = 128
+#     def forward(self, data_dict):
+#         spatial_features = data_dict['multi_scale_2d_features']
+#         conv2 = spatial_features['x_conv1']
+#         conv3 = spatial_features['x_conv2']
+#         conv4 = spatial_features['x_conv3']
+#
+#         # conv4 = spatial_features['x_conv4']
+#
+#         up3 = self.deconv3(conv4)
+#         up2 = self.lat_conv3(conv3) + up3
+#         print('fpn1:', up2.shape)
+#         up2 = self.deconv2(up2)
+#         up1 = self.lat_conv2(conv2) + up2
+#         print('deconv3:', up3.shape)
+#         print('conv4:', conv4.shape)
+#         print('fpn2:', up1.shape)
+#
+#         # x = torch.cat([up1, up2, up3], dim=1)
+#         # print('concat:', x.shape)
+#
+#         data_dict['spatial_features_2d'] = up1
+#
+#         return data_dict
+
 
 
 def post_act_block(in_channels, out_channels, kernel_size=3, stride=2, padding=1, norm_fn=None):

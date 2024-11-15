@@ -47,7 +47,7 @@ class BasicBlock(nn.Module):
 class InceptionDWConv2d(nn.Module):
     """ Inception depthweise convolution
     """
-    def __init__(self, in_channels, square_kernel_size=3, band_kernel_size=11, branch_ratio=0.125):
+    def __init__(self, in_channels, square_kernel_size=3, band_kernel_size=7, branch_ratio=0.125):
         super().__init__()
 
         gc = int(in_channels * branch_ratio) # channel numbers of a convolution branch
@@ -146,41 +146,44 @@ class PillarInceptionNextBackbone(nn.Module):
 
         # 定义主干网络的各个卷积层，使用 MetaNeXtBlock
         self.conv1 = nn.Sequential(
-            Block(64, 64, norm_fn=norm_fn, stride=2),
+            Block(32, 32, norm_fn=norm_fn, stride=1),
             # ResBlock(32, 32, norm_fn=norm_fn),
             # ResBlock(32, 32, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=32, token_mixer=InceptionDWConv2d, norm_layer=norm_fn)
+
         )
 
         self.conv2 = nn.Sequential(
-            downsample_block(64, 128, norm_fn=norm_fn, stride=2),
+            downsample_block(32, 64, norm_fn=norm_fn, stride=2),
             # ResBlock(64, 64, norm_fn=norm_fn),
             # ResBlock(64, 64, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            # MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
             # MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            MetaNeXtBlock(dim=64, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
 
         )
 
         self.conv3 = nn.Sequential(
-            downsample_block(128, 256, norm_fn=norm_fn),
-            # ResBlock(128, 128, norm_fn=norm_fn),
-            # ResBlock(128, 128, norm_fn=norm_fn),
-            MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-            MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            downsample_block(64, 128, norm_fn=norm_fn),
+            MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            ResBlock(128, 128, norm_fn=norm_fn),
+            ResBlock(128, 128, norm_fn=norm_fn),
+            # MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            # MetaNeXtBlock(dim=128, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
 
         )
 
-        # self.conv4 = nn.Sequential(
-        #     downsample_block(256, 256, norm_fn=norm_fn),
-        #     # ResBlock(256, 256, norm_fn=norm_fn),
-        #     # ResBlock(256, 256, norm_fn=norm_fn),
-        #     MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-        #     # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
-        # )
+        self.conv4 = nn.Sequential(
+            downsample_block(128, 256, norm_fn=norm_fn),
+            # ResBlock(256, 256, norm_fn=norm_fn),
+            ResBlock(256, 256, norm_fn=norm_fn),
+            # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+            # MetaNeXtBlock(dim=256, token_mixer=InceptionDWConv2d, norm_layer=norm_fn),
+        )
         #
         # self.conv5 = nn.Sequential(
         #     downsample_block(256, 256, norm_fn=norm_fn),
@@ -192,10 +195,10 @@ class PillarInceptionNextBackbone(nn.Module):
 
         self.num_point_features = 256
         self.backbone_channels = {
-            'x_conv1': 64,
-            'x_conv2': 128,
-            'x_conv3': 256,
-            # 'x_conv4': 256,
+            'x_conv1': 32,
+            'x_conv2': 64,
+            'x_conv3': 128,
+            'x_conv4': 256,
             # 'x_conv5': 256
         }
 
@@ -219,7 +222,7 @@ class PillarInceptionNextBackbone(nn.Module):
         x_conv3 = self.conv3(x_conv2)  # 输出通道数 128，stride 4
         # print(f"After conv3: shape={x_conv3.shape}")
 
-        # x_conv4 = self.conv4(x_conv3)  # 输出通道数 256，stride 8
+        x_conv4 = self.conv4(x_conv3)  # 输出通道数 256，stride 8
         # # x_conv4 = F.pad(x_conv4, (0, 1, 0, 1), mode='constant', value=0)# 为了保证特征图大小能被 2 整除
         # # print(f"After conv4: shape={x_conv4.shape}")
         #
@@ -234,14 +237,14 @@ class PillarInceptionNextBackbone(nn.Module):
                 'x_conv1': x_conv1,
                 'x_conv2': x_conv2,
                 'x_conv3': x_conv3,
-                # 'x_conv4': x_conv4,
+                'x_conv4': x_conv4,
                 # 'x_conv5': x_conv5,
             },
             'multi_scale_2d_strides': {
-                'x_conv1': 2,
-                'x_conv2': 4,
-                'x_conv3': 8,
-                # 'x_conv4': 8,
+                'x_conv1': 1,
+                'x_conv2': 2,
+                'x_conv3': 4,
+                'x_conv4': 8,
                 # 'x_conv5': 16,
             }
         })
